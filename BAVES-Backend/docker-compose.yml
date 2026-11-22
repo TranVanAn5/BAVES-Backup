@@ -1,0 +1,94 @@
+services:
+  # =============================================================================
+  # 1. Cơ sở dữ liệu: Microsoft SQL Server 2022
+  # =============================================================================
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: baves-sqlserver
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:-Password123!}"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - baves-sql-data:/var/opt/mssql
+      - ./database:/database
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD:-Password123!}\" -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks:
+      - baves-network
+
+  # =============================================================================
+  # 2. AI Agent Runtime: Python 3.11 FastAPI (Multi-agent Stakeholders)
+  # =============================================================================
+  agent-runtime:
+    build:
+      context: ./agent-runtime
+      dockerfile: Dockerfile
+    container_name: baves-agent-runtime
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      PYTHONUNBUFFERED: "1"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - baves-network
+
+  # =============================================================================
+  # 3. Backend Web API: .NET 9 Modular Monolith
+  # =============================================================================
+  backend-api:
+    build:
+      context: .
+      dockerfile: src/BAVES.Api/Dockerfile
+    container_name: baves-api
+    restart: unless-stopped
+    ports:
+      - "5291:5000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      agent-runtime:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "http://+:5000"
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=BAVES;User Id=sa;Password=${MSSQL_SA_PASSWORD:-Password123!};Encrypt=False;TrustServerCertificate=True;"
+      AiRuntime__BaseUrl: "http://agent-runtime:8000"
+      AiRuntime__InternalToken: "${AI_RUNTIME_TOKEN:-baves-internal-secret-token}"
+      Jwt__Issuer: "BA-VES"
+      Jwt__Audience: "BA-VES-Desktop"
+      Jwt__Key: "${JWT_SECRET_KEY:-BavesSecretKeySuperSecureLongEnoughForHmacSha256!}"
+      PayOS__ClientId: "${PAYOS_CLIENT_ID:-}"
+      PayOS__ApiKey: "${PAYOS_API_KEY:-}"
+      PayOS__ChecksumKey: "${PAYOS_CHECKSUM_KEY:-}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - baves-network
+
+networks:
+  baves-network:
+    driver: bridge
+
+volumes:
+  baves-sql-data:

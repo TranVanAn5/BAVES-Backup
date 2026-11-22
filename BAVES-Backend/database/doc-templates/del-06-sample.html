@@ -1,0 +1,298 @@
+<h1>Process Model</h1>
+
+<div style="background-color: #f4f5f7; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
+  <strong>Document Governance</strong><br/>
+  &bull; <strong>Document type:</strong> Business Process Model<br/>
+  &bull; <strong>Process name:</strong> Omnichannel Order &amp; Inventory Hold &nbsp;|&nbsp; <strong>Document ID:</strong> PROC-2026-01<br/>
+  &bull; <strong>Process owner:</strong> COO / Supply Chain &nbsp;|&nbsp; <strong>Author (Lead BA):</strong> [Learner full name]<br/>
+  &bull; <strong>Status:</strong> <span style="background-color: #deebff; color: #0747a6; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">IN REVIEW</span> &nbsp;|&nbsp; <strong>Deliverable:</strong> DEL-06
+</div>
+
+<div style="background-color: #deebff; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong>Learner guidelines</strong><br/>
+  Sample to-be process for inventory soft-hold after online payment. Replace timings and actors with your scenario facts.
+</div>
+
+<h2>1. Process Purpose &amp; Scope</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 25%;">Item</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Purpose</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Prevent oversell between online payment and warehouse picking while keeping POS checkout fast.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Trigger</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Online payment success event for a branch-fulfilled order.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Primary outcome</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Order packed with hard stock deduction, or clean auto-release with customer notification.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>In scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Hold creation, POS ATP update, pick list, packing confirmation, auto-release, offline POS queue.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Out of scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Carrier last-mile routing, marketplace onboarding, full WMS replacement.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Swimlanes (Participants)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Lane</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Actor / system</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Responsibility in this process</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 1</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Customer</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Places and pays for online order; receives status notifications.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 2</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Store POS</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Reflects ATP holds; continues offline sales when network drops.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 3</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Warehouse</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Receives pick list, picks, packs, confirms fulfillment.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 4</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Cloud OMS</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Creates hold, timers, events, hard deduct, notifications.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Happy Path (Step-by-Step)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6; width: 60px;">Step</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Lane / actor</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Activity &amp; trigger</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">System response / data out</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">SLA / timing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>1</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Customer</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Pays online successfully</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Order = Paid; OrderCreatedEvent</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Immediate</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>2</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cloud OMS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Checks branch ATP and creates soft hold</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reservation TTL=15m; ReserveCreatedEvent</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 3 seconds</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>3</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Store POS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Receives hold signal / delta sync</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Local ATP decreased</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 3 minutes</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>4</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Warehouse</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Prints pick list and starts picking</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Status = Picking</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Pick list &lt; 5 minutes</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>5</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Warehouse + OMS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Confirms packed</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Hard deduct; Status = Packed; notify customer</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Confirm &lt; 1 minute after pack</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. Decision Gateways</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Gateway ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Decision question</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Condition</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Next path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>GW-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Is ATP available at selected branch?</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Yes</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Create soft hold (Step 2)</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>GW-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Is ATP available at selected branch?</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">No</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">EX-02 alternate branch / cancel</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>GW-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Did picking start before hold TTL?</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">No</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">EX-01 auto-release</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5. Exception &amp; Alternate Paths</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Exception ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Trigger</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Handling steps</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">End state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>EX-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">15-minute hold timeout without Picking</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">1. Auto-release reserved qty<br/>2. Log reason OVERSELL_PREVENT_TIMEOUT<br/>3. Notify customer / CS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Released / Cancelled</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>EX-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Insufficient ATP at home branch</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">1. Search alternate branch &lt;= 5 km<br/>2. If found, reassign; else cancel + compensate policy</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reassigned / Cancelled</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>EX-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS network partition</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">1. POS offline mode using local snapshot<br/>2. Queue sales in outbox<br/>3. Replay by timestamp when online</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reconciled</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="border-left: 4px solid #de350b; background-color: #ffebe6; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong style="color: #bf2600;">Boundary note</strong><br/>
+  Offline POS must never block walk-in checkout. Conflict resolution after reconnect follows BR-02 (timestamp / first-come policy).
+</div>
+
+<h2>6. Data &amp; System Touchpoints</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Step</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">System</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Data in</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Data out / event</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">2</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cloud OMS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">orderId, branchId, sku, qty</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reservation record; ReserveCreatedEvent</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">3</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Store POS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">ReserveCreatedEvent</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Local ATP update</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">5</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cloud OMS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">PackConfirmed</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Hard deduct; shipment notification</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>7. SLA &amp; Performance Metrics</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Metric</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Definition</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Target</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Related requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Hold creation latency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Payment success to reservation created</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 3 seconds</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS ATP reflect latency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reservation to POS ATP decrease</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 3 minutes</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Pick-list latency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reservation to warehouse pick-list available</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 5 minutes</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-02</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>8. Traceability to Requirements</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Process step / gateway</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Business requirement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Business rule</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Step 2 Hold creation</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">EX-01 Auto-release</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code>, <code>BRD-REQ-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-03</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">EX-03 Offline POS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-02</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>9. Learner Practice Workspace</h2>
+<div style="background-color: #f4f5f7; border: 1px dashed #0052cc; padding: 14px; border-radius: 6px; margin: 14px 0;">
+  <strong>Complete using scenario evidence:</strong><br/>
+  &bull; Add EX-04 for customer cancel within 5 minutes after payment.<br/>
+  &bull; Specify which lane owns compensation messaging.<br/>
+  &bull; Confirm every exception ends in a named business state.
+</div>

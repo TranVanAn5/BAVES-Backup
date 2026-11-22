@@ -1,0 +1,752 @@
+// =============================================================================
+// Logical ERD — Hệ thống mô phỏng doanh nghiệp ảo đào tạo BA (BA-VES)
+// Mức: Logical (Kiểu dữ liệu chung: Integer, Text, Decimal, Date, DateTime, Boolean)
+// Tuân thủ quy trình ERD 5 bước (Conceptual -> Logical -> Physical)
+// Dán trực tiếp vào https://dbdiagram.io
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. Phân hệ Identity (Người dùng & Phân quyền)
+// -----------------------------------------------------------------------------
+Table User {
+  UserId Integer [pk]
+  Email Text [unique, not null]
+  UserName Text [unique]
+  FullName Text [not null]
+  AvatarUrl Text
+  PhoneNumber Text
+  Status Text [not null, note: 'Active | Suspended | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+Table Role {
+  RoleId Integer [pk]
+  Name Text [unique, not null, note: 'Admin | Instructor | Expert | Learner']
+  Description Text
+  IsActive Boolean [not null]
+  CreatedAt DateTime [not null]
+}
+
+Table UserRole {
+  UserId Integer [not null]
+  RoleId Integer [not null]
+  AssignedByUserId Integer
+  AssignedAt DateTime [not null]
+
+  indexes {
+    (UserId, RoleId) [pk]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 2. Phân hệ Content (Lĩnh vực & Ứng dụng doanh nghiệp)
+// -----------------------------------------------------------------------------
+Table Industry {
+  IndustryId Integer [pk]
+  Code Text [unique, not null, note: 'VD: BANKING, HEALTHCARE, LOGISTICS, EDUCATION']
+  Name Text [not null]
+  Description Text
+  DisplayOrder Integer [not null]
+  Status Text [not null, note: 'Active | Inactive | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+Table Application {
+  ApplicationId Integer [pk]
+  IndustryId Integer [not null]
+  Code Text [not null]
+  Name Text [not null]
+  Description Text
+  DisplayOrder Integer [not null]
+  Status Text [not null, note: 'Active | Inactive | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+
+  indexes {
+    (IndustryId, Code) [unique, note: 'BR-01: Mã ứng dụng duy nhất trong từng lĩnh vực']
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 3. Phân hệ Scenario (Kịch bản, Phiên bản, Stakeholder Persona & Tri thức)
+// -----------------------------------------------------------------------------
+Table Scenario {
+  ScenarioId Integer [pk]
+  ApplicationId Integer [not null]
+  CreatedByUserId Integer [not null, note: 'Instructor / Author']
+  Code Text [unique, not null]
+  Title Text [not null]
+  Description Text
+  Status Text [not null, note: 'Draft | Published | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+Table ScenarioVersion {
+  ScenarioVersionId Integer [pk]
+  ScenarioId Integer [not null]
+  VersionNo Integer [not null]
+  Summary Text
+  BusinessContext Text [not null]
+  BusinessProblem Text [not null]
+  BusinessObjectives Text [not null]
+  BARole Text [not null]
+  Assignment Text [not null]
+  InScope Text
+  OutOfScope Text
+  KnownConstraints Text
+  Difficulty Text [not null, note: 'Beginner | Intermediate | Advanced']
+  Status Text [not null, note: 'Draft | Published | Archived (Thay cho cờ IsPublished)']
+  CreatedAt DateTime [not null]
+  PublishedAt DateTime
+
+  indexes {
+    (ScenarioId, VersionNo) [unique, note: 'BR-02: Số phiên bản duy nhất trong mỗi kịch bản']
+  }
+}
+
+Table StakeholderPersona {
+  PersonaId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  Name Text [not null]
+  StakeholderRole Text [not null]
+  Department Text
+  Responsibilities Text
+  Goals Text
+  PainPoints Text
+  BusinessConcerns Text
+  CommunicationStyle Text
+  Personality Text
+  DisplayOrder Integer [not null]
+  Status Text [not null, note: 'Active | Inactive']
+
+  indexes {
+    (PersonaId, ScenarioVersionId) [unique, note: 'Đích cho FK ghép từ SessionAgent (Mục 8.4)']
+  }
+}
+
+Table KnowledgeItem {
+  KnowledgeItemId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  Code Text [not null]
+  Title Text [not null]
+  Content Text [not null]
+  Category Text [not null, note: 'BusinessFact | Process | Data | Policy | System | Constraint | Stakeholder']
+  Importance Text [not null, note: 'Low | Medium | High | Critical']
+  CreatedAt DateTime [not null]
+
+  indexes {
+    (ScenarioVersionId, Code) [unique, note: 'BR-03']
+    (KnowledgeItemId, ScenarioVersionId) [unique, note: 'Đích cho FK ghép đảm bảo cùng phiên bản kịch bản']
+  }
+}
+
+Table StakeholderKnowledgeAccess {
+  PersonaId Integer [not null]
+  KnowledgeItemId Integer [not null]
+  ScenarioVersionId Integer [not null, note: 'Ràng buộc Persona và KnowledgeItem thuộc cùng ScenarioVersion']
+  AccessType Text [not null, note: 'Knows | Partial | DoesNotKnow']
+  DisclosureRule Text
+  IsHidden Boolean [not null]
+
+  indexes {
+    (PersonaId, KnowledgeItemId) [pk]
+  }
+}
+
+Table BusinessRule {
+  BusinessRuleId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  Code Text [not null]
+  Title Text [not null]
+  Description Text [not null]
+  IsHidden Boolean [not null]
+  Importance Text [not null, note: 'Low | Medium | High | Critical']
+
+  indexes {
+    (ScenarioVersionId, Code) [unique]
+  }
+}
+
+Table ScenarioEvent {
+  ScenarioEventId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  Title Text [not null]
+  Description Text [not null]
+  TriggerType Text [not null, note: 'Manual | MessageCount | TimeElapsed | Condition']
+  TriggerConditionJson Text
+  EventContent Text [not null]
+  DisplayOrder Integer [not null]
+  Status Text [not null, note: 'Active | Inactive']
+
+  indexes {
+    (ScenarioEventId, ScenarioVersionId) [unique, note: 'Đích cho FK ghép từ SessionEvent (Mục 8.4)']
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 4. Phân hệ Training (Lớp học / Cohort & Giao bài tập)
+// -----------------------------------------------------------------------------
+Table Cohort {
+  CohortId Integer [pk]
+  InstructorId Integer [not null, note: 'Giảng viên phụ trách lớp']
+  Code Text [unique, not null]
+  Name Text [not null]
+  Description Text
+  StartDate Date
+  EndDate Date
+  Status Text [not null, note: 'Draft | Active | Completed | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+Table CohortMember {
+  CohortId Integer [not null]
+  LearnerId Integer [not null]
+  JoinedAt DateTime [not null]
+  Status Text [not null, note: 'Active | Removed | Completed']
+
+  indexes {
+    (CohortId, LearnerId) [pk, note: 'BR-05: Học viên không vào trùng một Cohort']
+  }
+}
+
+Table Assignment {
+  AssignmentId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  CohortId Integer [note: 'Giao cho cả lớp (XOR với LearnerId - BR-06)']
+  LearnerId Integer [note: 'Giao cho cá nhân (XOR với CohortId - BR-06)']
+  RubricId Integer
+  AssignedByUserId Integer [not null]
+  Title Text [not null]
+  Instructions Text
+  StartAt DateTime
+  DueAt DateTime
+  MaxAttempts Integer
+  Status Text [not null, note: 'Draft | Scheduled | Active | Closed | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+// -----------------------------------------------------------------------------
+// 5. Phân hệ Simulation (Phiên mô phỏng, Tác tử AI, Hội thoại & Sự kiện)
+// -----------------------------------------------------------------------------
+Table SimulationSession {
+  SessionId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  AssignmentId Integer
+  LearnerId Integer [not null]
+  AttemptNo Integer [not null]
+  Status Text [not null, note: 'Active | Submitted | Completed | Abandoned']
+  StartedAt DateTime [not null]
+  SubmittedAt DateTime
+  CompletedAt DateTime
+
+  indexes {
+    (SessionId, ScenarioVersionId) [unique, note: 'Đích cho FK ghép của SessionAgent & SessionEvent (Mục 8.4)']
+  }
+}
+
+Table SessionAgent {
+  SessionAgentId Integer [pk]
+  SessionId Integer [not null]
+  ScenarioVersionId Integer [not null, note: 'FK ghép đảm bảo Persona thuộc đúng ScenarioVersion của Session']
+  PersonaId Integer [not null]
+  MemorySummary Text
+  CurrentMood Text
+  TrustLevel Integer [note: '0..100']
+  PatienceLevel Integer [note: '0..100']
+  CooperationLevel Integer [note: '0..100']
+  Status Text [not null, note: 'Active | Inactive']
+  LastInteractionAt DateTime
+
+  indexes {
+    (SessionId, PersonaId) [unique, note: 'BR-08: Mỗi Persona chỉ có 1 Agent trong 1 phiên']
+    (SessionAgentId, SessionId) [unique, note: 'Đích cho FK ghép của Message']
+  }
+}
+
+Table Message {
+  MessageId Integer [pk]
+  SessionId Integer [not null]
+  SessionAgentId Integer [note: 'NULL nếu tin nhắn hệ thống']
+  SenderType Text [not null, note: 'Learner | Stakeholder | System']
+  Content Text [not null]
+  CreatedAt DateTime [not null]
+
+  indexes {
+    (MessageId, SessionId) [unique, note: 'Đích cho FK ghép của MessageEvidenceLink (Mục 8.4)']
+  }
+}
+
+Table SessionEvent {
+  SessionEventId Integer [pk]
+  SessionId Integer [not null]
+  ScenarioVersionId Integer [not null]
+  ScenarioEventId Integer [not null]
+  TriggerSource Text [not null, note: 'Automatic | Manual | Instructor']
+  TriggeredAt DateTime [not null]
+  SequenceNo Integer [not null]
+  EventContentSnapshot Text [not null]
+
+  indexes {
+    (SessionId, SequenceNo) [unique]
+  }
+}
+
+Table SessionAgentKnowledgeState {
+  SessionAgentId Integer [not null]
+  KnowledgeItemId Integer [not null]
+  IsRevealed Boolean [not null]
+  RevealedAt DateTime
+  RevealMessageId Integer
+
+  indexes {
+    (SessionAgentId, KnowledgeItemId) [pk]
+  }
+}
+
+Table CoachFeedback {
+  CoachFeedbackId Integer [pk]
+  SessionId Integer [not null]
+  CreatedByUserId Integer [not null]
+  StrengthsJson Text [not null]
+  GapsJson Text [not null]
+  UnclearPointsJson Text [not null]
+  ImprovementHintsJson Text [not null]
+  PromptVersion Text [not null]
+  CreatedAt DateTime [not null]
+}
+
+// -----------------------------------------------------------------------------
+// 6. Phân hệ Planning (Kế hoạch phỏng vấn BA & Câu hỏi dự kiến)
+// -----------------------------------------------------------------------------
+Table BAPlan {
+  BAPlanId Integer [pk]
+  SessionId Integer [unique, not null, note: 'BR-10: Mỗi phiên có tối đa 1 kế hoạch BA']
+  Objective Text [not null]
+  Approach Text
+  Status Text [not null, note: 'Draft | Ready | InProgress | Completed']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+Table PlannedQuestion {
+  PlannedQuestionId Integer [pk]
+  BAPlanId Integer [not null]
+  PersonaId Integer
+  Topic Text
+  InformationNeed Text
+  Question Text [not null]
+  Priority Text [not null, note: 'Low | Medium | High | Critical']
+  DisplayOrder Integer [not null]
+  Status Text [not null, note: 'Planned | Asked | Skipped']
+  CreatedAt DateTime [not null]
+}
+
+// -----------------------------------------------------------------------------
+// 7. Phân hệ Analysis (Mục phân tích & Liên kết bằng chứng hội thoại)
+// -----------------------------------------------------------------------------
+Table AnalysisItem {
+  AnalysisItemId Integer [pk]
+  SessionId Integer [not null]
+  ParentAnalysisItemId Integer [note: 'Tự tham chiếu cha-con (VD: Requirement dẫn xuất từ Finding/BusinessRule)']
+  ItemType Text [not null, note: 'Finding | Requirement | BusinessRule | Constraint | Risk | OpenQuestion | Conflict | Assumption']
+  Code Text [not null]
+  Title Text [not null]
+  Description Text [not null]
+  Priority Text [note: 'Low | Medium | High | Critical']
+  Status Text [not null, note: 'Draft | Confirmed | Resolved | Archived']
+  MetadataJson Text
+  CreatedByUserId Integer [not null]
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+
+  indexes {
+    (SessionId, Code) [unique, note: 'BR-11']
+    (AnalysisItemId, SessionId) [unique, note: 'Đích cho FK ghép của MessageEvidenceLink & ParentAnalysisItemId']
+  }
+}
+
+Table MessageEvidenceLink {
+  MessageId Integer [not null]
+  AnalysisItemId Integer [not null]
+  SessionId Integer [not null, note: 'FK ghép đảm bảo Message và AnalysisItem thuộc cùng 1 Session (Mục 8.4)']
+  RelationshipType Text [not null, note: 'Supports | Contradicts | Clarifies | Confirms']
+  CreatedAt DateTime [not null]
+
+  indexes {
+    (MessageId, AnalysisItemId, RelationshipType) [pk]
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 8. Phân hệ Artifact (Mẫu tài liệu, Tài liệu BA, Phiên bản & Bài nộp)
+// -----------------------------------------------------------------------------
+Table ArtifactTemplate {
+  ArtifactTemplateId Integer [pk]
+  Code Text [unique, not null]
+  Name Text [not null]
+  ArtifactType Text [not null, note: 'BRD | Generic | BAP | StakeholderRegister | BusinessRulesCatalog | SRS | UserStories | UseCaseSpecification | ImpactAnalysis | RTM']
+  Description Text
+  Status Text [not null, note: 'Draft | Published | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+}
+
+Table ArtifactTemplateSection {
+  SectionId Integer [pk]
+  ArtifactTemplateId Integer [not null]
+  SectionKey Text [not null]
+  Title Text [not null]
+  Instructions Text
+  DisplayOrder Integer [not null]
+  IsRequired Boolean [not null]
+
+  indexes {
+    (ArtifactTemplateId, SectionKey) [unique]
+  }
+}
+
+Table Artifact {
+  ArtifactId Integer [pk]
+  SessionId Integer [not null]
+  ArtifactTemplateId Integer [not null]
+  Title Text [not null]
+  DraftStructuredContentJson Text
+  DraftPlainTextContent Text
+  Status Text [not null, note: 'Draft | ReadyForSubmission | Submitted']
+  CurrentVersionNo Integer [not null]
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+
+  indexes {
+    (ArtifactId, SessionId) [unique, note: 'Đích cho FK ghép của ArtifactVersion -> Submission']
+  }
+}
+
+Table ArtifactVersion {
+  ArtifactVersionId Integer [pk]
+  ArtifactId Integer [not null]
+  SessionId Integer [not null, note: 'FK ghép đảm bảo tính toàn vẹn với Submission']
+  VersionNo Integer [not null]
+  StructuredContentJson Text [not null]
+  PlainTextContent Text [not null]
+  CreatedByUserId Integer [not null]
+  ProcessingStatus Text [not null, note: 'Created | Processing | Ready | Failed']
+  CreatedAt DateTime [not null]
+
+  indexes {
+    (ArtifactId, VersionNo) [unique]
+    (ArtifactVersionId, SessionId) [unique, note: 'Đích cho FK ghép từ Submission (Mục 8.4)']
+  }
+}
+
+Table Submission {
+  SubmissionId Integer [pk]
+  SessionId Integer [not null]
+  ArtifactVersionId Integer [not null]
+  AttemptNo Integer [not null]
+  Status Text [not null, note: 'Submitted | Finalized | Withdrawn']
+  SubmittedAt DateTime [not null]
+  FinalizedAt DateTime
+
+  indexes {
+    (SessionId, AttemptNo) [unique, note: 'BR-13']
+  }
+}
+
+// -----------------------------------------------------------------------------
+// 9. Phân hệ Assessment (BABOK, Rubric, Chấm điểm AI & Chuyên gia — Chuẩn 3NF)
+// -----------------------------------------------------------------------------
+Table BabokTask {
+  BabokTaskId Integer [pk]
+  KnowledgeAreaCode Text [not null, note: 'VD: RADD, ELIC, BAPL, RLCM, STRAT, SOLE']
+  KnowledgeAreaName Text [not null, note: 'Tên vùng kiến thức BABOK v3']
+  Code Text [not null]
+  Name Text [not null]
+  Purpose Text
+  Description Text
+  BabokVersion Text [not null]
+  DisplayOrder Integer [not null]
+
+  indexes {
+    (BabokVersion, Code) [unique]
+  }
+}
+
+Table Rubric {
+  RubricId Integer [pk]
+  ScenarioVersionId Integer [not null]
+  CreatedByUserId Integer [not null]
+  Name Text [not null]
+  Version Integer [not null]
+  Description Text
+  Status Text [not null, note: 'Draft | Published | Archived']
+  CreatedAt DateTime [not null]
+  UpdatedAt DateTime
+
+  indexes {
+    (ScenarioVersionId, Version) [unique]
+  }
+}
+
+Table RubricCriterion {
+  RubricCriterionId Integer [pk]
+  RubricId Integer [not null]
+  BabokTaskId Integer [not null]
+  Code Text [not null]
+  Name Text [not null]
+  Description Text [not null]
+  Weight Decimal [not null]
+  MaxScore Decimal [not null]
+  EvidenceGuidance Text
+  DisplayOrder Integer [not null]
+  IsRequired Boolean [not null]
+
+  indexes {
+    (RubricId, Code) [unique]
+    (RubricCriterionId, RubricId) [unique, note: 'Đích cho FK ghép của bảng điểm chi tiết (Mục 8.4)']
+  }
+}
+
+Table AIPracticeFeedback {
+  AIFeedbackId Integer [pk]
+  SubmissionId Integer [not null]
+  RubricId Integer [not null]
+  Provider Text [not null]
+  Model Text [not null]
+  Status Text [not null, note: 'Pending | Processing | Completed | Failed']
+  OverallFeedback Text
+  SuggestedScore Decimal [note: 'Tổng điểm đề xuất']
+  Confidence Decimal [note: '0..1']
+  StartedAt DateTime [not null]
+  CompletedAt DateTime
+
+  indexes {
+    (AIFeedbackId, RubricId) [unique, note: 'Đích cho FK ghép của AIFeedbackCriterionScore']
+  }
+}
+
+// Bảng tách chuẩn 1NF-3NF từ FeedbackItemsJson để truy vấn báo cáo BABOK
+Table AIFeedbackCriterionScore {
+  AIFeedbackId Integer [not null]
+  RubricCriterionId Integer [not null]
+  RubricId Integer [not null, note: 'FK ghép đảm bảo tiêu chí thuộc đúng Rubric của lần chấm']
+  Score Decimal [not null]
+  Comment Text
+  EvidenceSnippet Text
+
+  indexes {
+    (AIFeedbackId, RubricCriterionId) [pk]
+  }
+}
+
+Table HumanReview {
+  HumanReviewId Integer [pk]
+  SubmissionId Integer [not null]
+  RubricId Integer [not null]
+  ReviewerId Integer [not null, note: 'Expert / Instructor']
+  FinalScore Decimal [not null]
+  OverallFeedback Text
+  ReviewedAt DateTime [not null]
+
+  indexes {
+    (SubmissionId, ReviewerId) [unique, note: 'BR-16: Mỗi chuyên gia chấm tối đa 1 bản đánh giá chính thức cho 1 bài nộp']
+    (HumanReviewId, RubricId) [unique, note: 'Đích cho FK ghép của HumanReviewCriterionScore']
+  }
+}
+
+// Bảng tách chuẩn 1NF-3NF từ CriterionResultsJson để truy vấn báo cáo BABOK
+Table HumanReviewCriterionScore {
+  HumanReviewId Integer [not null]
+  RubricCriterionId Integer [not null]
+  RubricId Integer [not null, note: 'FK ghép đảm bảo tiêu chí thuộc đúng Rubric của lần chấm']
+  Score Decimal [not null]
+  Comment Text
+
+  indexes {
+    (HumanReviewId, RubricCriterionId) [pk]
+  }
+}
+
+Table ReviewRequest {
+  ReviewRequestId Integer [pk]
+  SubmissionId Integer [not null]
+  LearnerId Integer [not null]
+  AssignedReviewerId Integer
+  RequestNote Text
+  Status Text [not null, note: 'Pending | Accepted | Completed | Cancelled']
+  RequestedAt DateTime [not null]
+  AcceptedAt DateTime
+  CompletedAt DateTime
+}
+
+// -----------------------------------------------------------------------------
+// 10. Phân hệ Commerce (Gói cước, Đơn hàng, Thanh toán PayOS & Quyền truy cập)
+// -----------------------------------------------------------------------------
+Table Plan {
+  PlanId Integer [pk]
+  Code Text [unique, not null, note: 'VD: PLAN-FREE, PLAN-OMNIMART, PLAN-PRO, PLAN-REVIEW-3']
+  Name Text [not null]
+  Description Text
+  PlanType Text [not null, note: 'Free | ScenarioBundle | Subscription | ReviewCredit']
+  ScopeType Text [not null, note: 'Industry | Application | Scenario | All']
+  ScopeId Integer [note: 'NULL nếu ScopeType = All']
+  Price Decimal [not null]
+  Currency Text [not null]
+  DurationDays Integer
+  SessionQuota Integer
+  ReviewCredits Integer [not null]
+  DisplayOrder Integer [not null]
+  Status Text [not null, note: 'Draft | Published | Archived']
+  CreatedAt DateTime [not null]
+}
+
+Table Order {
+  OrderId Integer [pk]
+  OrderCode Integer [unique, not null, note: 'Mã đơn số nguyên duy nhất gửi sang PayOS']
+  UserId Integer [not null]
+  PlanId Integer [not null]
+  Amount Decimal [not null]
+  Currency Text [not null]
+  PlanSnapshotJson Text [not null]
+  IdempotencyKey Text
+  CheckoutUrl Text
+  QrCode Text
+  Status Text [not null, note: 'Pending | Paid | Cancelled | Expired | Failed | Refunded']
+  CreatedAt DateTime [not null]
+  ExpiresAt DateTime [not null]
+  PaidAt DateTime
+  CancelledAt DateTime
+}
+
+Table PaymentTransaction {
+  TransactionId Integer [pk]
+  OrderId Integer [not null]
+  Provider Text [not null, note: 'PayOS']
+  ProviderTransactionId Text [not null]
+  Amount Decimal [not null]
+  SignatureValid Boolean [not null]
+  RawPayloadJson Text
+  Status Text [not null, note: 'Pending | Succeeded | Failed']
+  ReceivedAt DateTime [not null]
+
+  indexes {
+    (Provider, ProviderTransactionId) [unique, note: 'BR-19: Không xử lý trùng giao dịch Webhook từ cổng thanh toán']
+  }
+}
+
+Table Entitlement {
+  EntitlementId Integer [pk]
+  UserId Integer [not null]
+  SourceType Text [not null, note: 'Free | Purchase | Subscription | CohortAssignment | Admin']
+  SourceOrderId Integer
+  ScopeType Text [not null, note: 'Industry | Application | Scenario | All']
+  ScopeId Integer
+  SessionQuota Integer
+  SessionsUsed Integer [not null]
+  ReviewCreditsQuota Integer [not null, note: 'Tổng số lượt chấm chuyên gia được cấp']
+  ReviewCreditsUsed Integer [not null, note: 'Số lượt chấm chuyên gia đã sử dụng']
+  StartsAt DateTime [not null]
+  EndsAt DateTime
+  Status Text [not null, note: 'Active | Expired | Revoked']
+  CreatedAt DateTime [not null]
+}
+
+// =============================================================================
+// QUAN HỆ KHÓA NGOẠI (REFERENCES)
+// =============================================================================
+
+// 1. Identity
+Ref: UserRole.UserId > User.UserId
+Ref: UserRole.RoleId > Role.RoleId
+Ref: UserRole.AssignedByUserId > User.UserId
+
+// 2. Content
+Ref: Application.IndustryId > Industry.IndustryId
+
+// 3. Scenario
+Ref: Scenario.ApplicationId > Application.ApplicationId
+Ref: Scenario.CreatedByUserId > User.UserId
+Ref: ScenarioVersion.ScenarioId > Scenario.ScenarioId
+Ref: StakeholderPersona.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+Ref: KnowledgeItem.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+Ref: StakeholderKnowledgeAccess.(PersonaId, ScenarioVersionId) > StakeholderPersona.(PersonaId, ScenarioVersionId)
+Ref: StakeholderKnowledgeAccess.(KnowledgeItemId, ScenarioVersionId) > KnowledgeItem.(KnowledgeItemId, ScenarioVersionId)
+Ref: BusinessRule.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+Ref: ScenarioEvent.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+
+// 4. Training
+Ref: Cohort.InstructorId > User.UserId
+Ref: CohortMember.CohortId > Cohort.CohortId
+Ref: CohortMember.LearnerId > User.UserId
+Ref: Assignment.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+Ref: Assignment.CohortId > Cohort.CohortId
+Ref: Assignment.LearnerId > User.UserId
+Ref: Assignment.RubricId > Rubric.RubricId
+Ref: Assignment.AssignedByUserId > User.UserId
+
+// 5. Simulation (Áp dụng FK ghép mục 8.4)
+Ref: SimulationSession.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+Ref: SimulationSession.AssignmentId > Assignment.AssignmentId
+Ref: SimulationSession.LearnerId > User.UserId
+Ref: SessionAgent.(SessionId, ScenarioVersionId) > SimulationSession.(SessionId, ScenarioVersionId)
+Ref: SessionAgent.(PersonaId, ScenarioVersionId) > StakeholderPersona.(PersonaId, ScenarioVersionId)
+Ref: Message.SessionId > SimulationSession.SessionId
+Ref: Message.(SessionAgentId, SessionId) > SessionAgent.(SessionAgentId, SessionId)
+Ref: SessionEvent.(SessionId, ScenarioVersionId) > SimulationSession.(SessionId, ScenarioVersionId)
+Ref: SessionEvent.(ScenarioEventId, ScenarioVersionId) > ScenarioEvent.(ScenarioEventId, ScenarioVersionId)
+Ref: SessionAgentKnowledgeState.SessionAgentId > SessionAgent.SessionAgentId
+Ref: SessionAgentKnowledgeState.KnowledgeItemId > KnowledgeItem.KnowledgeItemId
+Ref: SessionAgentKnowledgeState.RevealMessageId > Message.MessageId
+Ref: CoachFeedback.SessionId > SimulationSession.SessionId
+Ref: CoachFeedback.CreatedByUserId > User.UserId
+
+// 6. Planning
+Ref: BAPlan.SessionId - SimulationSession.SessionId
+Ref: PlannedQuestion.BAPlanId > BAPlan.BAPlanId
+Ref: PlannedQuestion.PersonaId > StakeholderPersona.PersonaId
+
+// 7. Analysis (Áp dụng FK ghép mục 8.4)
+Ref: AnalysisItem.SessionId > SimulationSession.SessionId
+Ref: AnalysisItem.CreatedByUserId > User.UserId
+Ref: AnalysisItem.(ParentAnalysisItemId, SessionId) > AnalysisItem.(AnalysisItemId, SessionId)
+Ref: MessageEvidenceLink.(MessageId, SessionId) > Message.(MessageId, SessionId)
+Ref: MessageEvidenceLink.(AnalysisItemId, SessionId) > AnalysisItem.(AnalysisItemId, SessionId)
+
+// 8. Artifact (Áp dụng FK ghép mục 8.4)
+Ref: ArtifactTemplateSection.ArtifactTemplateId > ArtifactTemplate.ArtifactTemplateId
+Ref: Artifact.SessionId > SimulationSession.SessionId
+Ref: Artifact.ArtifactTemplateId > ArtifactTemplate.ArtifactTemplateId
+Ref: ArtifactVersion.(ArtifactId, SessionId) > Artifact.(ArtifactId, SessionId)
+Ref: ArtifactVersion.CreatedByUserId > User.UserId
+Ref: Submission.SessionId > SimulationSession.SessionId
+Ref: Submission.(ArtifactVersionId, SessionId) > ArtifactVersion.(ArtifactVersionId, SessionId)
+
+// 9. Assessment (Áp dụng FK ghép mục 8.4)
+Ref: Rubric.ScenarioVersionId > ScenarioVersion.ScenarioVersionId
+Ref: Rubric.CreatedByUserId > User.UserId
+Ref: RubricCriterion.RubricId > Rubric.RubricId
+Ref: RubricCriterion.BabokTaskId > BabokTask.BabokTaskId
+Ref: AIPracticeFeedback.SubmissionId > Submission.SubmissionId
+Ref: AIPracticeFeedback.RubricId > Rubric.RubricId
+Ref: AIFeedbackCriterionScore.(AIFeedbackId, RubricId) > AIPracticeFeedback.(AIFeedbackId, RubricId)
+Ref: AIFeedbackCriterionScore.(RubricCriterionId, RubricId) > RubricCriterion.(RubricCriterionId, RubricId)
+Ref: HumanReview.SubmissionId > Submission.SubmissionId
+Ref: HumanReview.RubricId > Rubric.RubricId
+Ref: HumanReview.ReviewerId > User.UserId
+Ref: HumanReviewCriterionScore.(HumanReviewId, RubricId) > HumanReview.(HumanReviewId, RubricId)
+Ref: HumanReviewCriterionScore.(RubricCriterionId, RubricId) > RubricCriterion.(RubricCriterionId, RubricId)
+Ref: ReviewRequest.SubmissionId > Submission.SubmissionId
+Ref: ReviewRequest.LearnerId > User.UserId
+Ref: ReviewRequest.AssignedReviewerId > User.UserId
+
+// 10. Commerce (Gói cước, Đơn hàng, Thanh toán PayOS & Quyền truy cập)
+Ref: Order.UserId > User.UserId
+Ref: Order.PlanId > Plan.PlanId
+Ref: PaymentTransaction.OrderId > Order.OrderId
+Ref: Entitlement.UserId > User.UserId
+Ref: Entitlement.SourceOrderId > Order.OrderId

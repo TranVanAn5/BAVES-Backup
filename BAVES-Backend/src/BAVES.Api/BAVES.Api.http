@@ -1,0 +1,53 @@
+@BAVES.Api_HostAddress = http://localhost:5291
+@accessToken = REPLACE_WITH_ACCESS_TOKEN
+@refreshToken = REPLACE_WITH_REFRESH_TOKEN
+
+GET {{BAVES.Api_HostAddress}}/health
+Accept: application/json
+
+###
+
+POST {{BAVES.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "fullName": "Demo Learner",
+  "email": "learner@example.com",
+  "password": "ReplaceWithPassword1"
+}
+
+###
+
+GET {{BAVES.Api_HostAddress}}/api/users/me
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+###
+
+POST {{BAVES.Api_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+POST {{BAVES.Api_HostAddress}}/api/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+###
+
+POST {{BAVES.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "learner@example.com",
+  "password": "ReplaceWithPassword1"
+}
+
+###

@@ -1,0 +1,283 @@
+<h1>Process Model</h1>
+
+<div style="background-color: #f4f5f7; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
+  <strong>Document Governance</strong><br/>
+  &bull; <strong>Document type:</strong> Business Process Model<br/>
+  &bull; <strong>Process name:</strong> [Process name] &nbsp;|&nbsp; <strong>Document ID:</strong> PROC-2026-01<br/>
+  &bull; <strong>Process owner:</strong> [Role] &nbsp;|&nbsp; <strong>Author (Lead BA):</strong> [Learner full name]<br/>
+  &bull; <strong>Status:</strong> <span style="background-color: #dfe1e6; color: #42526e; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">DRAFT</span> &nbsp;|&nbsp; <strong>Deliverable:</strong> DEL-06
+</div>
+
+<div style="background-color: #deebff; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong>Learner guidelines</strong><br/>
+  1. Define swimlanes, triggers, and end states before detailing steps.<br/>
+  2. Specify happy path and exception paths with clear hand-offs.<br/>
+  3. Include measurable SLA / cycle-time targets for critical steps.
+</div>
+
+<h2>1. Process Purpose &amp; Scope</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 25%;">Item</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Purpose</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Why this process exists]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Trigger</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Event that starts the process]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Primary outcome</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Successful end state]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>In scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Included activities / systems]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Out of scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Excluded activities / systems]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Swimlanes (Participants)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Lane</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Actor / system</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Responsibility in this process</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 1</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Customer / initiator]</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Responsibility]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 2</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Front-office / POS]</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Responsibility]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 3</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Back-office / warehouse]</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Responsibility]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Lane 4</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Core system / platform]</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Responsibility]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Happy Path (Step-by-Step)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6; width: 60px;">Step</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Lane / actor</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Activity &amp; trigger</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">System response / data out</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">SLA / timing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>1</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Actor]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Action]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Output / state]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Time]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>2</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Actor]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Action]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Output / state]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Time]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>3</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Actor]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Action]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Output / state]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Time]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>4</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Actor]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Action]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Output / state]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Time]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;"><strong>5</strong></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Actor]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Action]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Output / state]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Time]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. Decision Gateways</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Gateway ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Decision question</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Condition</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Next path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>GW-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Question]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Yes / Pass</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Continue happy path</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>GW-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Question]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">No / Fail</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Go to exception EX-01</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>GW-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Question]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Condition]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Path]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5. Exception &amp; Alternate Paths</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Exception ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Trigger</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Handling steps</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">End state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>EX-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Timeout / failure / policy breach]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">1. [Step]<br/>2. [Step]<br/>3. [Notify / compensate]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Cancelled / Reassigned / Retried]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>EX-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Trigger]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">1. [Step]<br/>2. [Step]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[End state]</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="border-left: 4px solid #de350b; background-color: #ffebe6; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong style="color: #bf2600;">Boundary note</strong><br/>
+  Describe how the process behaves when a system is offline or a timer expires. Reference related business rules (e.g. BR-01).
+</div>
+
+<h2>6. Data &amp; System Touchpoints</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Step</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">System</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Data in</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Data out / event</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Step #]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[System]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Inputs]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Outputs / events]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Step #]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[System]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Inputs]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Outputs / events]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>7. SLA &amp; Performance Metrics</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Metric</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Definition</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Target</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Related requirement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cycle time</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Start event to end event]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-xx</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Hand-off latency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Critical hand-off]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-xx</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Exception rate</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[% of cases entering EX paths]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-xx</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>8. Traceability to Requirements</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Process step / gateway</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Business requirement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Business rule</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Step [n]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">GW-01 / EX-01</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-xx</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-xx</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>9. Learner Practice Workspace</h2>
+<div style="background-color: #f4f5f7; border: 1px dashed #0052cc; padding: 14px; border-radius: 6px; margin: 14px 0;">
+  <strong>Complete using scenario evidence:</strong><br/>
+  &bull; Add one customer-initiated cancel path within 5 minutes of payment.<br/>
+  &bull; Define SLA for the most critical hand-off between lanes.<br/>
+  &bull; Link at least two happy-path steps to BRD requirement IDs.
+</div>

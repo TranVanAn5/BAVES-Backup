@@ -1,0 +1,1212 @@
+// =============================================================================
+// Physical ERD — Hệ thống mô phỏng doanh nghiệp ảo đào tạo BA (BA-VES)
+// Mức: Physical (DBMS: SQL Server / 9 Schemas, Enum, Index, Cascade, FK ghép)
+// Tuân thủ quy trình ERD 5 bước — Mục 9.5 (DBML Physical)
+// Dán trực tiếp vào https://dbdiagram.io
+// =============================================================================
+
+Project baves_mvp {
+  database_type: 'SQL Server'
+  Note: 'Hệ thống mô phỏng doanh nghiệp ảo đa lĩnh vực ứng dụng AI đào tạo kỹ năng BA (BA-VES)'
+}
+
+// =============================================================================
+// ENUMS (Lấy từ State Diagram / Domain Enums)
+// =============================================================================
+Enum user_status {
+  Active
+  Suspended
+  Archived
+}
+
+Enum content_status {
+  Active
+  Inactive
+  Archived
+}
+
+Enum scenario_status {
+  Draft
+  Published
+  Archived
+}
+
+Enum scenario_difficulty {
+  Beginner
+  Intermediate
+  Advanced
+}
+
+Enum importance_level {
+  Low
+  Medium
+  High
+  Critical
+}
+
+Enum knowledge_category {
+  BusinessFact
+  Process
+  Data
+  Policy
+  System
+  Constraint
+  Stakeholder
+}
+
+Enum knowledge_access_type {
+  Knows
+  Partial
+  DoesNotKnow
+}
+
+Enum scenario_event_trigger_type {
+  Manual
+  MessageCount
+  TimeElapsed
+  Condition
+}
+
+Enum cohort_status {
+  Draft
+  Active
+  Completed
+  Archived
+}
+
+Enum cohort_member_status {
+  Active
+  Removed
+  Completed
+}
+
+Enum assignment_status {
+  Draft
+  Scheduled
+  Active
+  Closed
+  Archived
+}
+
+Enum session_status {
+  Active
+  Submitted
+  Completed
+  Abandoned
+}
+
+Enum message_sender_type {
+  Learner
+  Stakeholder
+  System
+}
+
+Enum event_trigger_source {
+  Automatic
+  Manual
+  Instructor
+}
+
+Enum ba_plan_status {
+  Draft
+  Ready
+  InProgress
+  Completed
+}
+
+Enum planned_question_status {
+  Planned
+  Asked
+  Skipped
+}
+
+Enum priority_level {
+  Low
+  Medium
+  High
+  Critical
+}
+
+Enum analysis_item_type {
+  Finding
+  Requirement
+  BusinessRule
+  Constraint
+  Risk
+  OpenQuestion
+  Conflict
+  Assumption
+}
+
+Enum analysis_item_status {
+  Draft
+  Confirmed
+  Resolved
+  Archived
+}
+
+Enum analysis_relationship_type {
+  Derives
+  Supports
+  ConflictsWith
+  Refines
+  DependsOn
+  Validates
+}
+
+Enum evidence_relationship_type {
+  Supports
+  Contradicts
+  Clarifies
+  Confirms
+}
+
+Enum artifact_type {
+  BRD
+  Generic
+  BAP
+  StakeholderRegister
+  BusinessRulesCatalog
+  SRS
+  UserStories
+  UseCaseSpecification
+  ImpactAnalysis
+  RTM
+}
+
+Enum review_request_status {
+  Pending
+  Accepted
+  Completed
+  Cancelled
+}
+
+Enum artifact_template_status {
+  Draft
+  Published
+  Archived
+}
+
+Enum artifact_status {
+  Draft
+  ReadyForSubmission
+  Submitted
+}
+
+Enum artifact_processing_status {
+  Created
+  Processing
+  Ready
+  Failed
+}
+
+Enum submission_status {
+  Submitted
+  Finalized
+  Withdrawn
+}
+
+Enum rubric_status {
+  Draft
+  Published
+  Archived
+}
+
+Enum ai_feedback_status {
+  Pending
+  Processing
+  Completed
+  Failed
+}
+
+Enum plan_type {
+  Free
+  ScenarioBundle
+  Subscription
+  ReviewCredit
+}
+
+Enum plan_status {
+  Draft
+  Published
+  Archived
+}
+
+Enum scope_type {
+  Industry
+  Application
+  Scenario
+  All
+}
+
+Enum order_status {
+  Pending
+  Paid
+  Cancelled
+  Expired
+  Failed
+  Refunded
+}
+
+Enum payment_transaction_status {
+  Pending
+  Succeeded
+  Failed
+}
+
+Enum entitlement_source_type {
+  Free
+  Purchase
+  Subscription
+  CohortAssignment
+  Admin
+}
+
+Enum entitlement_status {
+  Active
+  Expired
+  Revoked
+}
+
+Enum credit_reason {
+  Purchase
+  ReviewRequest
+  Refund
+  AdminAdjustment
+}
+
+// =============================================================================
+// 1. SCHEMA: identity
+// =============================================================================
+Table identity.Users {
+  Id int [pk, increment]
+  Email nvarchar(320) [unique, not null]
+  NormalizedEmail nvarchar(320)
+  UserName nvarchar(256)
+  NormalizedUserName nvarchar(256) [unique]
+  FullName nvarchar(200) [not null]
+  AvatarUrl nvarchar(1000)
+  PhoneNumber nvarchar(50)
+  Status user_status [not null, default: 'Active']
+  EmailConfirmed bit [not null, default: 0]
+  PhoneNumberConfirmed bit [not null, default: 0]
+  PasswordHash nvarchar(max)
+  SecurityStamp nvarchar(max)
+  ConcurrencyStamp nvarchar(max)
+  TwoFactorEnabled bit [not null, default: 0]
+  LockoutEnd datetimeoffset(3)
+  LockoutEnabled bit [not null, default: 1]
+  AccessFailedCount int [not null, default: 0]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    NormalizedEmail [name: 'EmailIndex']
+    Status [name: 'IX_Users_Status']
+  }
+}
+
+Table identity.Roles {
+  Id int [pk, increment]
+  Name nvarchar(256) [not null]
+  NormalizedName nvarchar(256) [unique]
+  Description nvarchar(max)
+  IsActive bit [not null, default: 1]
+  ConcurrencyStamp nvarchar(max)
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+}
+
+Table identity.UserRoles {
+  UserId int [not null]
+  RoleId int [not null]
+  AssignedByUserId int
+  AssignedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    (UserId, RoleId) [pk]
+    RoleId [name: 'IX_UserRoles_RoleId']
+    AssignedByUserId [name: 'IX_UserRoles_AssignedByUserId']
+  }
+}
+
+Table identity.UserTokens {
+  UserId int [not null]
+  LoginProvider nvarchar(450) [not null]
+  Name nvarchar(450) [not null]
+  Value nvarchar(max)
+
+  indexes {
+    (UserId, LoginProvider, Name) [pk]
+  }
+}
+
+// =============================================================================
+// 2. SCHEMA: content
+// =============================================================================
+Table content.Industries {
+  Id int [pk, increment]
+  Code nvarchar(80) [unique, not null]
+  Name nvarchar(200) [not null]
+  Description nvarchar(max)
+  Status content_status [not null, default: 'Active']
+  DisplayOrder int [not null, default: 1]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+}
+
+Table content.Applications {
+  Id int [pk, increment]
+  IndustryId int [not null]
+  Code nvarchar(80) [not null]
+  Name nvarchar(200) [not null]
+  Description nvarchar(max)
+  Status content_status [not null, default: 'Active']
+  DisplayOrder int [not null, default: 1]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    (IndustryId, Code) [unique, name: 'IX_Applications_IndustryId_Code']
+  }
+}
+
+// =============================================================================
+// 3. SCHEMA: scenario
+// =============================================================================
+Table scenario.Scenarios {
+  Id int [pk, increment]
+  ApplicationId int [not null]
+  CreatedByUserId int [not null]
+  Code nvarchar(80) [unique, not null]
+  Title nvarchar(200) [not null]
+  Description nvarchar(max)
+  Status scenario_status [not null, default: 'Draft']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    ApplicationId [name: 'IX_Scenarios_ApplicationId']
+    CreatedByUserId [name: 'IX_Scenarios_CreatedByUserId']
+  }
+}
+
+Table scenario.ScenarioVersions {
+  Id int [pk, increment]
+  ScenarioId int [not null]
+  VersionNo int [not null, note: 'CHECK (VersionNo > 0)']
+  Summary nvarchar(max)
+  BusinessContext nvarchar(max) [not null]
+  BusinessProblem nvarchar(max) [not null]
+  BusinessObjectives nvarchar(max) [not null]
+  BARole nvarchar(500) [not null]
+  Assignment nvarchar(max) [not null]
+  InScope nvarchar(max)
+  OutOfScope nvarchar(max)
+  KnownConstraints nvarchar(max)
+  Difficulty scenario_difficulty [not null, default: 'Intermediate']
+  Status scenario_status [not null, default: 'Draft', note: 'Chuẩn hóa từ IsPublished theo 5Đ']
+  IsPublished bit [not null, default: 0]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  PublishedAt datetimeoffset(3)
+
+  indexes {
+    (ScenarioId, VersionNo) [unique, name: 'IX_ScenarioVersions_ScenarioId_VersionNo']
+  }
+}
+
+Table scenario.StakeholderPersonas {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  Name nvarchar(200) [not null]
+  StakeholderRole nvarchar(200) [not null]
+  Department nvarchar(200)
+  Responsibilities nvarchar(max)
+  Goals nvarchar(max)
+  PainPoints nvarchar(max)
+  BusinessConcerns nvarchar(max)
+  CommunicationStyle nvarchar(200)
+  Personality nvarchar(max)
+  DisplayOrder int [not null, default: 1]
+  IsActive bit [not null, default: 1]
+
+  indexes {
+    ScenarioVersionId [name: 'IX_StakeholderPersonas_ScenarioVersionId']
+    (Id, ScenarioVersionId) [unique, name: 'UX_StakeholderPersonas_Id_ScenarioVersionId']
+  }
+}
+
+Table scenario.KnowledgeItems {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  Code nvarchar(80) [not null]
+  Title nvarchar(200) [not null]
+  Content nvarchar(max) [not null]
+  Category knowledge_category [not null]
+  Importance importance_level [not null, default: 'Medium']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    (ScenarioVersionId, Code) [unique, name: 'IX_KnowledgeItems_ScenarioVersionId_Code']
+    (Id, ScenarioVersionId) [unique, name: 'UX_KnowledgeItems_Id_ScenarioVersionId']
+  }
+}
+
+Table scenario.StakeholderKnowledgeAccess {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null, note: 'Đảm bảo Persona & KnowledgeItem thuộc cùng ScenarioVersion']
+  StakeholderPersonaId int [not null]
+  KnowledgeItemId int [not null]
+  AccessType knowledge_access_type [not null, default: 'Knows']
+  DisclosureRule nvarchar(max)
+  IsHidden bit [not null, default: 0]
+
+  indexes {
+    (StakeholderPersonaId, KnowledgeItemId) [unique, name: 'IX_StakeholderKnowledgeAccess_StakeholderPersonaId_KnowledgeItemId']
+    KnowledgeItemId [name: 'IX_StakeholderKnowledgeAccess_KnowledgeItemId']
+  }
+}
+
+Table scenario.BusinessRules {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  Code nvarchar(80) [not null]
+  Title nvarchar(200) [not null]
+  Description nvarchar(max) [not null]
+  IsHidden bit [not null, default: 0]
+  Importance importance_level [not null, default: 'Medium']
+
+  indexes {
+    (ScenarioVersionId, Code) [unique, name: 'IX_BusinessRules_ScenarioVersionId_Code']
+  }
+}
+
+Table scenario.ScenarioEvents {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  Title nvarchar(200) [not null]
+  Description nvarchar(max) [not null]
+  TriggerType scenario_event_trigger_type [not null]
+  TriggerConditionJson nvarchar(max)
+  EventContent nvarchar(max) [not null]
+  DisplayOrder int [not null, default: 1]
+  IsActive bit [not null, default: 1]
+
+  indexes {
+    ScenarioVersionId [name: 'IX_ScenarioEvents_ScenarioVersionId']
+    (Id, ScenarioVersionId) [unique, name: 'UX_ScenarioEvents_Id_ScenarioVersionId']
+  }
+}
+
+// =============================================================================
+// 4. SCHEMA: training
+// =============================================================================
+Table training.Cohorts {
+  Id int [pk, increment]
+  InstructorId int [not null]
+  Code nvarchar(80) [unique, not null]
+  Name nvarchar(200) [not null]
+  Description nvarchar(max)
+  StartDate date
+  EndDate date [note: 'CHECK (EndDate IS NULL OR EndDate >= StartDate)']
+  Status cohort_status [not null, default: 'Draft']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    InstructorId [name: 'IX_Cohorts_InstructorId']
+  }
+}
+
+Table training.CohortMembers {
+  Id int [pk, increment]
+  CohortId int [not null]
+  LearnerId int [not null]
+  JoinedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  Status cohort_member_status [not null, default: 'Active']
+
+  indexes {
+    (CohortId, LearnerId) [unique, name: 'IX_CohortMembers_CohortId_LearnerId']
+    LearnerId [name: 'IX_CohortMembers_LearnerId']
+  }
+}
+
+Table training.Assignments {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  CohortId int
+  LearnerId int
+  RubricId int
+  AssignedByUserId int [not null]
+  Title nvarchar(200) [not null]
+  Instructions nvarchar(max)
+  StartAt datetimeoffset(3)
+  DueAt datetimeoffset(3)
+  MaxAttempts int [note: 'CHECK (MaxAttempts > 0)']
+  Status assignment_status [not null, default: 'Draft']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    ScenarioVersionId [name: 'IX_Assignments_ScenarioVersionId']
+    CohortId [name: 'IX_Assignments_CohortId']
+    LearnerId [name: 'IX_Assignments_LearnerId']
+    RubricId [name: 'IX_Assignments_RubricId']
+    AssignedByUserId [name: 'IX_Assignments_AssignedByUserId']
+  }
+}
+
+// =============================================================================
+// 5. SCHEMA: simulation
+// =============================================================================
+Table simulation.SimulationSessions {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  AssignmentId int
+  LearnerId int [not null]
+  AttemptNo int [not null, note: 'CHECK (AttemptNo > 0)']
+  Status session_status [not null, default: 'Active']
+  StartedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  SubmittedAt datetimeoffset(3)
+  CompletedAt datetimeoffset(3)
+
+  indexes {
+    ScenarioVersionId [name: 'IX_SimulationSessions_ScenarioVersionId']
+    AssignmentId [name: 'IX_SimulationSessions_AssignmentId']
+    LearnerId [name: 'IX_SimulationSessions_LearnerId']
+    (Id, ScenarioVersionId) [unique, name: 'UX_SimulationSessions_Id_ScenarioVersionId']
+  }
+}
+
+Table simulation.SessionAgents {
+  Id int [pk, increment]
+  SessionId int [not null]
+  ScenarioVersionId int [not null, note: 'FK ghép chặn gán Persona sai kịch bản (Mục 8.4)']
+  PersonaId int [not null]
+  MemorySummary nvarchar(max)
+  CurrentMood nvarchar(200)
+  TrustLevel tinyint [note: 'CHECK (0..100)']
+  PatienceLevel tinyint [note: 'CHECK (0..100)']
+  CooperationLevel tinyint [note: 'CHECK (0..100)']
+  IsActive bit [not null, default: 1]
+  LastInteractionAt datetimeoffset(3)
+
+  indexes {
+    (SessionId, PersonaId) [unique, name: 'IX_SessionAgents_SessionId_PersonaId']
+    PersonaId [name: 'IX_SessionAgents_PersonaId']
+    (Id, SessionId) [unique, name: 'UX_SessionAgents_Id_SessionId']
+  }
+}
+
+Table simulation.Messages {
+  Id int [pk, increment]
+  SessionId int [not null]
+  SessionAgentId int
+  SenderType message_sender_type [not null]
+  Content nvarchar(max) [not null]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    (SessionId, CreatedAt) [name: 'IX_Messages_SessionId_CreatedAt']
+    SessionAgentId [name: 'IX_Messages_SessionAgentId']
+    (Id, SessionId) [unique, name: 'UX_Messages_Id_SessionId']
+  }
+}
+
+Table simulation.SessionEvents {
+  Id int [pk, increment]
+  SessionId int [not null]
+  ScenarioVersionId int [not null, note: 'FK ghép chặn nổ sự kiện sai kịch bản (Mục 8.4)']
+  ScenarioEventId int [not null]
+  TriggerSource event_trigger_source [not null]
+  TriggeredAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  SequenceNo int [not null]
+  EventContentSnapshot nvarchar(max) [not null]
+
+  indexes {
+    (SessionId, SequenceNo) [unique, name: 'IX_SessionEvents_SessionId_SequenceNo']
+    ScenarioEventId [name: 'IX_SessionEvents_ScenarioEventId']
+  }
+}
+
+Table simulation.SessionAgentKnowledgeStates {
+  Id int [pk, increment]
+  SessionAgentId int [not null]
+  KnowledgeItemId int [not null]
+  IsRevealed bit [not null, default: 0]
+  RevealedAt datetimeoffset(3)
+  RevealMessageId int
+
+  indexes {
+    (SessionAgentId, KnowledgeItemId) [unique, name: 'IX_SessionAgentKnowledgeStates_SessionAgentId_KnowledgeItemId']
+    KnowledgeItemId [name: 'IX_SessionAgentKnowledgeStates_KnowledgeItemId']
+    RevealMessageId [name: 'IX_SessionAgentKnowledgeStates_RevealMessageId']
+  }
+}
+
+Table simulation.CoachFeedbacks {
+  Id int [pk, increment]
+  SessionId int [not null]
+  CreatedByUserId int [not null]
+  StrengthsJson nvarchar(max) [not null, default: '[]']
+  GapsJson nvarchar(max) [not null, default: '[]']
+  UnclearPointsJson nvarchar(max) [not null, default: '[]']
+  ImprovementHintsJson nvarchar(max) [not null, default: '[]']
+  PromptVersion nvarchar(100) [not null, default: 'coach@1.0.0']
+  CreatedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+
+  indexes {
+    (SessionId, CreatedAt) [name: 'IX_CoachFeedbacks_SessionId_CreatedAt']
+  }
+}
+
+// =============================================================================
+// 6. SCHEMA: planning
+// =============================================================================
+Table planning.BAPlans {
+  Id int [pk, increment]
+  SessionId int [unique, not null]
+  Objective nvarchar(max) [not null]
+  Approach nvarchar(max)
+  Status ba_plan_status [not null, default: 'Draft']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+}
+
+Table planning.PlannedQuestions {
+  Id int [pk, increment]
+  BAPlanId int [not null]
+  StakeholderPersonaId int
+  Topic nvarchar(max)
+  InformationNeed nvarchar(max)
+  Question nvarchar(max) [not null]
+  Priority priority_level [not null, default: 'Medium']
+  DisplayOrder int [not null, default: 1]
+  Status planned_question_status [not null, default: 'Planned']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    (BAPlanId, DisplayOrder) [name: 'IX_PlannedQuestions_BAPlanId_DisplayOrder']
+    StakeholderPersonaId [name: 'IX_PlannedQuestions_StakeholderPersonaId']
+  }
+}
+
+// =============================================================================
+// 7. SCHEMA: analysis
+// =============================================================================
+Table analysis.AnalysisItems {
+  Id int [pk, increment]
+  SessionId int [not null]
+  ParentAnalysisItemId int [note: 'Tự tham chiếu cha-con (VD: Requirement dẫn xuất từ Finding/BusinessRule)']
+  ItemType analysis_item_type [not null]
+  Code nvarchar(80) [not null]
+  Title nvarchar(200) [not null]
+  Description nvarchar(max) [not null]
+  Priority priority_level
+  Status analysis_item_status [not null, default: 'Draft']
+  MetadataJson nvarchar(max)
+  CreatedByUserId int [not null]
+  CreatedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    SessionId [name: 'IX_AnalysisItems_SessionId']
+    ParentAnalysisItemId [name: 'IX_AnalysisItems_ParentAnalysisItemId']
+    (SessionId, Code) [unique, name: 'IX_AnalysisItems_SessionId_Code']
+    (SessionId, ItemType) [name: 'IX_AnalysisItems_SessionId_ItemType']
+    CreatedByUserId [name: 'IX_AnalysisItems_CreatedByUserId']
+    (Id, SessionId) [unique, name: 'UX_AnalysisItems_Id_SessionId']
+  }
+}
+
+Table analysis.MessageEvidenceLinks {
+  Id int [pk, increment]
+  SessionId int [not null, note: 'FK ghép đảm bảo Message và AnalysisItem thuộc cùng Session (Mục 8.4)']
+  MessageId int [not null]
+  AnalysisItemId int [not null]
+  RelationshipType evidence_relationship_type [not null]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    (MessageId, AnalysisItemId, RelationshipType) [unique, name: 'IX_MessageEvidenceLinks_Msg_Item_Type']
+    MessageId [name: 'IX_MessageEvidenceLinks_MessageId']
+    AnalysisItemId [name: 'IX_MessageEvidenceLinks_AnalysisItemId']
+  }
+}
+
+// =============================================================================
+// 8. SCHEMA: artifact
+// =============================================================================
+Table artifact.ArtifactTemplates {
+  Id int [pk, increment]
+  Code nvarchar(80) [unique, not null]
+  Name nvarchar(200) [not null]
+  ArtifactType artifact_type [not null, default: 'BRD']
+  Description nvarchar(max)
+  Status artifact_template_status [not null, default: 'Draft']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+}
+
+Table artifact.ArtifactTemplateSections {
+  Id int [pk, increment]
+  ArtifactTemplateId int [not null]
+  SectionKey nvarchar(80) [not null]
+  Title nvarchar(200) [not null]
+  Instructions nvarchar(max)
+  DisplayOrder int [not null, default: 1]
+  IsRequired bit [not null, default: 1]
+
+  indexes {
+    (ArtifactTemplateId, SectionKey) [unique, name: 'IX_ArtifactTemplateSections_TemplateId_SectionKey']
+  }
+}
+
+Table artifact.Artifacts {
+  Id int [pk, increment]
+  SessionId int [not null]
+  ArtifactTemplateId int [not null]
+  Title nvarchar(200) [not null]
+  DraftStructuredContentJson nvarchar(max)
+  DraftPlainTextContent nvarchar(max)
+  Status artifact_status [not null, default: 'Draft']
+  CurrentVersionNo int [not null, default: 0]
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    SessionId [name: 'IX_Artifacts_SessionId']
+    ArtifactTemplateId [name: 'IX_Artifacts_ArtifactTemplateId']
+    (Id, SessionId) [unique, name: 'UX_Artifacts_Id_SessionId']
+  }
+}
+
+Table artifact.ArtifactVersions {
+  Id int [pk, increment]
+  ArtifactId int [not null]
+  SessionId int [not null, note: 'Đích cho FK ghép của Submission (Mục 8.4)']
+  VersionNo int [not null]
+  StructuredContentJson nvarchar(max) [not null]
+  PlainTextContent nvarchar(max) [not null]
+  CreatedByUserId int [not null]
+  ProcessingStatus artifact_processing_status [not null, default: 'Ready']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    (ArtifactId, VersionNo) [unique, name: 'IX_ArtifactVersions_ArtifactId_VersionNo']
+    CreatedByUserId [name: 'IX_ArtifactVersions_CreatedByUserId']
+    (Id, SessionId) [unique, name: 'UX_ArtifactVersions_Id_SessionId']
+  }
+}
+
+Table artifact.Submissions {
+  Id int [pk, increment]
+  SessionId int [not null]
+  ArtifactVersionId int [not null]
+  AttemptNo int [not null]
+  Status submission_status [not null, default: 'Submitted']
+  SubmittedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  FinalizedAt datetimeoffset(3)
+
+  indexes {
+    (SessionId, AttemptNo) [unique, name: 'IX_Submissions_SessionId_AttemptNo']
+    ArtifactVersionId [name: 'IX_Submissions_ArtifactVersionId']
+    SessionId [name: 'IX_Submissions_SessionId']
+  }
+}
+
+// =============================================================================
+// 9. SCHEMA: assessment (Chuẩn hóa 3NF cho chấm điểm BABOK)
+// =============================================================================
+Table assessment.BabokTasks {
+  Id int [pk, increment]
+  KnowledgeAreaCode nvarchar(80) [not null, default: 'RADD']
+  KnowledgeAreaName nvarchar(200) [not null]
+  Code nvarchar(80) [not null]
+  Name nvarchar(200) [not null]
+  Purpose nvarchar(max)
+  Description nvarchar(max)
+  BabokVersion nvarchar(50) [not null, default: 'v3']
+  DisplayOrder int [not null, default: 1]
+
+  indexes {
+    (BabokVersion, Code) [unique, name: 'IX_BabokTasks_BabokVersion_Code']
+    KnowledgeAreaCode [name: 'IX_BabokTasks_KnowledgeAreaCode']
+  }
+}
+
+Table assessment.Rubrics {
+  Id int [pk, increment]
+  ScenarioVersionId int [not null]
+  CreatedByUserId int [not null]
+  Name nvarchar(200) [not null]
+  Version int [not null, default: 1]
+  Description nvarchar(max)
+  Status rubric_status [not null, default: 'Draft']
+  CreatedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  UpdatedAt datetimeoffset(3)
+
+  indexes {
+    (ScenarioVersionId, Version) [unique, name: 'IX_Rubrics_ScenarioVersionId_Version']
+    ScenarioVersionId [name: 'IX_Rubrics_ScenarioVersionId']
+    CreatedByUserId [name: 'IX_Rubrics_CreatedByUserId']
+  }
+}
+
+Table assessment.RubricCriteria {
+  Id int [pk, increment]
+  RubricId int [not null]
+  BabokTaskId int [not null]
+  Code nvarchar(80) [not null]
+  Name nvarchar(200) [not null]
+  Description nvarchar(max) [not null]
+  Weight decimal(9,4) [not null]
+  MaxScore decimal(9,4) [not null]
+  EvidenceGuidance nvarchar(max)
+  DisplayOrder int [not null, default: 1]
+  IsRequired bit [not null, default: 1]
+
+  indexes {
+    (RubricId, Code) [unique, name: 'IX_RubricCriteria_RubricId_Code']
+    BabokTaskId [name: 'IX_RubricCriteria_BabokTaskId']
+    (Id, RubricId) [unique, name: 'UX_RubricCriteria_Id_RubricId']
+  }
+}
+
+Table assessment.AIPracticeFeedbacks {
+  Id int [pk, increment]
+  SubmissionId int [not null]
+  RubricId int [not null]
+  Provider nvarchar(50) [not null]
+  Model nvarchar(100) [not null]
+  Status ai_feedback_status [not null, default: 'Pending']
+  OverallFeedback nvarchar(max)
+  FeedbackItemsJson nvarchar(max) [not null, note: 'Giữ tương thích C#, chi tiết chuẩn 3NF nằm ở AIFeedbackCriterionScores']
+  SuggestedScore decimal(9,4)
+  Confidence decimal(5,4)
+  StartedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+  CompletedAt datetimeoffset(3)
+
+  indexes {
+    SubmissionId [name: 'IX_AIPracticeFeedbacks_SubmissionId']
+    (Id, RubricId) [unique, name: 'UX_AIPracticeFeedbacks_Id_RubricId']
+  }
+}
+
+Table assessment.AIFeedbackCriterionScores {
+  AIFeedbackId int [not null]
+  RubricCriterionId int [not null]
+  RubricId int [not null]
+  Score decimal(9,4) [not null]
+  Comment nvarchar(max)
+  EvidenceSnippet nvarchar(max)
+
+  indexes {
+    (AIFeedbackId, RubricCriterionId) [pk]
+    RubricCriterionId [name: 'IX_AIFeedbackCriterionScores_RubricCriterionId']
+  }
+}
+
+Table assessment.HumanReviews {
+  Id int [pk, increment]
+  SubmissionId int [not null]
+  RubricId int [not null]
+  ReviewerId int [not null]
+  FinalScore decimal(9,4) [not null]
+  CriterionResultsJson nvarchar(max) [not null, note: 'Giữ tương thích C#, chi tiết chuẩn 3NF nằm ở HumanReviewCriterionScores']
+  OverallFeedback nvarchar(max)
+  ReviewedAt datetimeoffset(3) [not null, default: `SYSDATETIMEOFFSET()`]
+
+  indexes {
+    SubmissionId [name: 'IX_HumanReviews_SubmissionId']
+    RubricId [name: 'IX_HumanReviews_RubricId']
+    ReviewerId [name: 'IX_HumanReviews_ReviewerId']
+    (SubmissionId, ReviewerId) [unique, name: 'UX_HumanReviews_SubmissionId_ReviewerId']
+    (Id, RubricId) [unique, name: 'UX_HumanReviews_Id_RubricId']
+  }
+}
+
+Table assessment.HumanReviewCriterionScores {
+  HumanReviewId int [not null]
+  RubricCriterionId int [not null]
+  RubricId int [not null]
+  Score decimal(9,4) [not null]
+  Comment nvarchar(max)
+
+  indexes {
+    (HumanReviewId, RubricCriterionId) [pk]
+    RubricCriterionId [name: 'IX_HumanReviewCriterionScores_RubricCriterionId']
+  }
+}
+
+Table assessment.ReviewRequests {
+  Id int [pk, increment]
+  SubmissionId int [not null]
+  LearnerId int [not null]
+  AssignedReviewerId int
+  RequestNote nvarchar(1000)
+  Status review_request_status [not null, default: 'Pending']
+  RequestedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+  AcceptedAt datetimeoffset(3)
+  CompletedAt datetimeoffset(3)
+
+  indexes {
+    SubmissionId [name: 'IX_ReviewRequests_SubmissionId']
+    LearnerId [name: 'IX_ReviewRequests_LearnerId']
+    AssignedReviewerId [name: 'IX_ReviewRequests_AssignedReviewerId']
+    Status [name: 'IX_ReviewRequests_Status']
+  }
+}
+
+// =============================================================================
+// 10. SCHEMA: commerce (Gói cước, Đơn hàng, Thanh toán PayOS & Quyền truy cập)
+// =============================================================================
+Table commerce.Plans {
+  Id int [pk, increment]
+  Code nvarchar(50) [unique, not null]
+  Name nvarchar(150) [not null]
+  Description nvarchar(1000)
+  PlanType plan_type [not null]
+  ScopeType scope_type [not null, default: 'All']
+  ScopeId int
+  Price decimal(12,2) [not null, default: 0, note: 'CHECK (Price >= 0)']
+  Currency nvarchar(10) [not null, default: 'VND']
+  DurationDays int
+  SessionQuota int
+  ReviewCredits int [not null, default: 0]
+  Status plan_status [not null, default: 'Draft']
+  DisplayOrder int [not null, default: 0]
+  CreatedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+}
+
+Table commerce.Orders {
+  Id int [pk, increment]
+  OrderCode bigint [unique, not null, note: 'Mã đơn số nguyên gửi sang PayOS']
+  UserId int [not null]
+  PlanId int [not null]
+  Amount decimal(12,2) [not null]
+  Currency nvarchar(10) [not null, default: 'VND']
+  PlanSnapshotJson nvarchar(max) [not null, default: '{}']
+  Status order_status [not null, default: 'Pending']
+  IdempotencyKey nvarchar(100)
+  CheckoutUrl nvarchar(500)
+  QrCode nvarchar(2000)
+  CreatedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+  ExpiresAt datetimeoffset(3) [not null]
+  PaidAt datetimeoffset(3)
+  CancelledAt datetimeoffset(3)
+
+  indexes {
+    UserId [name: 'IX_Orders_UserId']
+    IdempotencyKey [name: 'IX_Orders_IdempotencyKey']
+  }
+}
+
+Table commerce.PaymentTransactions {
+  Id int [pk, increment]
+  OrderId int [not null]
+  Provider nvarchar(50) [not null, default: 'PayOS']
+  ProviderTransactionId nvarchar(100) [not null]
+  Amount decimal(12,2) [not null]
+  Status payment_transaction_status [not null, default: 'Pending']
+  SignatureValid bit [not null, default: 0]
+  RawPayloadJson nvarchar(max)
+  ReceivedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+
+  indexes {
+    (Provider, ProviderTransactionId) [unique, name: 'UQ_PaymentTransactions_Provider_TxId']
+  }
+}
+
+Table commerce.Entitlements {
+  Id int [pk, increment]
+  UserId int [not null]
+  SourceType entitlement_source_type [not null, default: 'Purchase']
+  SourceOrderId int
+  ScopeType scope_type [not null]
+  ScopeId int
+  StartsAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+  EndsAt datetimeoffset(3)
+  SessionQuota int
+  SessionsUsed int [not null, default: 0]
+  ReviewCreditsQuota int [not null, default: 0]
+  ReviewCreditsUsed int [not null, default: 0]
+  Status entitlement_status [not null, default: 'Active']
+  CreatedAt datetimeoffset(3) [not null, default: SYSDATETIMEOFFSET()]
+
+  indexes {
+    (UserId, Status) [name: 'IX_Entitlements_UserId_Status']
+    (ScopeType, ScopeId) [name: 'IX_Entitlements_Scope']
+  }
+}
+
+// =============================================================================
+// REFERENCES (Bao gồm [delete: cascade] cho Composition & FK ghép Mục 8.4)
+// =============================================================================
+
+// Identity
+Ref: identity.UserRoles.UserId > identity.Users.Id [delete: cascade]
+Ref: identity.UserRoles.RoleId > identity.Roles.Id [delete: cascade]
+Ref: identity.UserRoles.AssignedByUserId > identity.Users.Id
+Ref: identity.UserTokens.UserId > identity.Users.Id [delete: cascade]
+
+// Content
+Ref: content.Applications.IndustryId > content.Industries.Id
+
+// Scenario (Composition -> delete: cascade)
+Ref: scenario.Scenarios.ApplicationId > content.Applications.Id
+Ref: scenario.Scenarios.CreatedByUserId > identity.Users.Id
+Ref: scenario.ScenarioVersions.ScenarioId > scenario.Scenarios.Id [delete: cascade]
+Ref: scenario.StakeholderPersonas.ScenarioVersionId > scenario.ScenarioVersions.Id [delete: cascade]
+Ref: scenario.KnowledgeItems.ScenarioVersionId > scenario.ScenarioVersions.Id [delete: cascade]
+Ref: scenario.StakeholderKnowledgeAccess.(StakeholderPersonaId, ScenarioVersionId) > scenario.StakeholderPersonas.(Id, ScenarioVersionId) [delete: cascade]
+Ref: scenario.StakeholderKnowledgeAccess.(KnowledgeItemId, ScenarioVersionId) > scenario.KnowledgeItems.(Id, ScenarioVersionId)
+Ref: scenario.BusinessRules.ScenarioVersionId > scenario.ScenarioVersions.Id [delete: cascade]
+Ref: scenario.ScenarioEvents.ScenarioVersionId > scenario.ScenarioVersions.Id [delete: cascade]
+
+// Training
+Ref: training.Cohorts.InstructorId > identity.Users.Id
+Ref: training.CohortMembers.CohortId > training.Cohorts.Id [delete: cascade]
+Ref: training.CohortMembers.LearnerId > identity.Users.Id
+Ref: training.Assignments.ScenarioVersionId > scenario.ScenarioVersions.Id
+Ref: training.Assignments.CohortId > training.Cohorts.Id
+Ref: training.Assignments.LearnerId > identity.Users.Id
+Ref: training.Assignments.RubricId > assessment.Rubrics.Id
+Ref: training.Assignments.AssignedByUserId > identity.Users.Id
+
+// Simulation (Composition + FK ghép Mục 8.4)
+Ref: simulation.SimulationSessions.ScenarioVersionId > scenario.ScenarioVersions.Id
+Ref: simulation.SimulationSessions.AssignmentId > training.Assignments.Id
+Ref: simulation.SimulationSessions.LearnerId > identity.Users.Id
+Ref: simulation.SessionAgents.(SessionId, ScenarioVersionId) > simulation.SimulationSessions.(Id, ScenarioVersionId) [delete: cascade]
+Ref: simulation.SessionAgents.(PersonaId, ScenarioVersionId) > scenario.StakeholderPersonas.(Id, ScenarioVersionId)
+Ref: simulation.Messages.SessionId > simulation.SimulationSessions.Id [delete: cascade]
+Ref: simulation.Messages.(SessionAgentId, SessionId) > simulation.SessionAgents.(Id, SessionId)
+Ref: simulation.SessionEvents.(SessionId, ScenarioVersionId) > simulation.SimulationSessions.(Id, ScenarioVersionId) [delete: cascade]
+Ref: simulation.SessionEvents.(ScenarioEventId, ScenarioVersionId) > scenario.ScenarioEvents.(Id, ScenarioVersionId)
+Ref: simulation.SessionAgentKnowledgeStates.SessionAgentId > simulation.SessionAgents.Id [delete: cascade]
+Ref: simulation.SessionAgentKnowledgeStates.KnowledgeItemId > scenario.KnowledgeItems.Id
+Ref: simulation.SessionAgentKnowledgeStates.RevealMessageId > simulation.Messages.Id
+Ref: simulation.CoachFeedbacks.SessionId > simulation.SimulationSessions.Id [delete: cascade]
+Ref: simulation.CoachFeedbacks.CreatedByUserId > identity.Users.Id
+
+// Planning
+Ref: planning.BAPlans.SessionId - simulation.SimulationSessions.Id [delete: cascade]
+Ref: planning.PlannedQuestions.BAPlanId > planning.BAPlans.Id [delete: cascade]
+Ref: planning.PlannedQuestions.StakeholderPersonaId > scenario.StakeholderPersonas.Id
+
+// Analysis (FK ghép Mục 8.4)
+Ref: analysis.AnalysisItems.SessionId > simulation.SimulationSessions.Id [delete: cascade]
+Ref: analysis.AnalysisItems.CreatedByUserId > identity.Users.Id
+Ref: analysis.AnalysisItems.(ParentAnalysisItemId, SessionId) > analysis.AnalysisItems.(Id, SessionId)
+Ref: analysis.MessageEvidenceLinks.(MessageId, SessionId) > simulation.Messages.(Id, SessionId)
+Ref: analysis.MessageEvidenceLinks.(AnalysisItemId, SessionId) > analysis.AnalysisItems.(Id, SessionId) [delete: cascade]
+
+// Artifact (Composition + FK ghép Mục 8.4)
+Ref: artifact.ArtifactTemplateSections.ArtifactTemplateId > artifact.ArtifactTemplates.Id [delete: cascade]
+Ref: artifact.Artifacts.SessionId > simulation.SimulationSessions.Id [delete: cascade]
+Ref: artifact.Artifacts.ArtifactTemplateId > artifact.ArtifactTemplates.Id
+Ref: artifact.ArtifactVersions.(ArtifactId, SessionId) > artifact.Artifacts.(Id, SessionId) [delete: cascade]
+Ref: artifact.ArtifactVersions.CreatedByUserId > identity.Users.Id
+Ref: artifact.Submissions.SessionId > simulation.SimulationSessions.Id
+Ref: artifact.Submissions.(ArtifactVersionId, SessionId) > artifact.ArtifactVersions.(Id, SessionId)
+
+// Assessment (Composition + FK ghép Mục 8.4)
+Ref: assessment.Rubrics.ScenarioVersionId > scenario.ScenarioVersions.Id
+Ref: assessment.Rubrics.CreatedByUserId > identity.Users.Id
+Ref: assessment.RubricCriteria.RubricId > assessment.Rubrics.Id [delete: cascade]
+Ref: assessment.RubricCriteria.BabokTaskId > assessment.BabokTasks.Id
+Ref: assessment.AIPracticeFeedbacks.SubmissionId > artifact.Submissions.Id [delete: cascade]
+Ref: assessment.AIPracticeFeedbacks.RubricId > assessment.Rubrics.Id
+Ref: assessment.AIFeedbackCriterionScores.(AIFeedbackId, RubricId) > assessment.AIPracticeFeedbacks.(Id, RubricId) [delete: cascade]
+Ref: assessment.AIFeedbackCriterionScores.(RubricCriterionId, RubricId) > assessment.RubricCriteria.(Id, RubricId)
+Ref: assessment.HumanReviews.SubmissionId > artifact.Submissions.Id [delete: cascade]
+Ref: assessment.HumanReviews.RubricId > assessment.Rubrics.Id
+Ref: assessment.HumanReviews.ReviewerId > identity.Users.Id
+Ref: assessment.HumanReviewCriterionScores.(HumanReviewId, RubricId) > assessment.HumanReviews.(Id, RubricId) [delete: cascade]
+Ref: assessment.HumanReviewCriterionScores.(RubricCriterionId, RubricId) > assessment.RubricCriteria.(Id, RubricId)
+Ref: assessment.ReviewRequests.SubmissionId > artifact.Submissions.Id [delete: cascade]
+Ref: assessment.ReviewRequests.LearnerId > identity.Users.Id
+Ref: assessment.ReviewRequests.AssignedReviewerId > identity.Users.Id
+
+// Commerce (Composition + References)
+Ref: commerce.Orders.PlanId > commerce.Plans.Id
+Ref: commerce.Orders.UserId > identity.Users.Id
+Ref: commerce.PaymentTransactions.OrderId > commerce.Orders.Id [delete: cascade]
+Ref: commerce.Entitlements.UserId > identity.Users.Id
+Ref: commerce.Entitlements.SourceOrderId > commerce.Orders.Id [delete: set null]
+
+// =============================================================================
+// TABLE GROUPS (Tô màu phân hệ trên dbdiagram.io)
+// =============================================================================
+TableGroup grp_identity [color: #3B82F6] {
+  identity.Users
+  identity.Roles
+  identity.UserRoles
+  identity.UserTokens
+}
+
+TableGroup grp_content [color: #10B981] {
+  content.Industries
+  content.Applications
+}
+
+TableGroup grp_scenario [color: #8B5CF6] {
+  scenario.Scenarios
+  scenario.ScenarioVersions
+  scenario.StakeholderPersonas
+  scenario.KnowledgeItems
+  scenario.StakeholderKnowledgeAccess
+  scenario.BusinessRules
+  scenario.ScenarioEvents
+}
+
+TableGroup grp_training [color: #F59E0B] {
+  training.Cohorts
+  training.CohortMembers
+  training.Assignments
+}
+
+TableGroup grp_simulation [color: #EF4444] {
+  simulation.SimulationSessions
+  simulation.SessionAgents
+  simulation.Messages
+  simulation.SessionEvents
+  simulation.SessionAgentKnowledgeStates
+  simulation.CoachFeedbacks
+}
+
+TableGroup grp_planning [color: #06B6D4] {
+  planning.BAPlans
+  planning.PlannedQuestions
+}
+
+TableGroup grp_analysis [color: #EC4899] {
+  analysis.AnalysisItems
+  analysis.MessageEvidenceLinks
+}
+
+TableGroup grp_artifact [color: #6366F1] {
+  artifact.ArtifactTemplates
+  artifact.ArtifactTemplateSections
+  artifact.Artifacts
+  artifact.ArtifactVersions
+  artifact.Submissions
+}
+
+TableGroup grp_assessment [color: #14B8A6] {
+  assessment.BabokTasks
+  assessment.Rubrics
+  assessment.RubricCriteria
+  assessment.AIPracticeFeedbacks
+  assessment.AIFeedbackCriterionScores
+  assessment.HumanReviews
+  assessment.HumanReviewCriterionScores
+  assessment.ReviewRequests
+}
+
+TableGroup grp_commerce [color: #EAB308] {
+  commerce.Plans
+  commerce.Orders
+  commerce.PaymentTransactions
+  commerce.Entitlements
+}

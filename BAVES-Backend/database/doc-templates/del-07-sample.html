@@ -1,0 +1,300 @@
+<h1>Requirements Specification</h1>
+
+<div style="background-color: #f4f5f7; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
+  <strong>Document Governance</strong><br/>
+  &bull; <strong>Document type:</strong> Software / Solution Requirements Specification<br/>
+  &bull; <strong>Project:</strong> VinaSupply Omnichannel OMS &nbsp;|&nbsp; <strong>Document ID:</strong> SRS-2026-01<br/>
+  &bull; <strong>Author (Lead BA):</strong> [Learner full name] &nbsp;|&nbsp; <strong>Technical approver:</strong> IT Lead Nguyen Quoc Tuan<br/>
+  &bull; <strong>Status:</strong> <span style="background-color: #deebff; color: #0747a6; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">IN REVIEW</span> &nbsp;|&nbsp; <strong>Deliverable:</strong> DEL-07
+</div>
+
+<div style="background-color: #deebff; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong>Learner guidelines</strong><br/>
+  Sample SRS for inventory soft-hold and offline POS continuity. Replace IDs and payloads with your scenario facts.
+</div>
+
+<h2>1. Scope &amp; Trace Context</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 30%;">Item</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Solution in scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Reserve/release inventory APIs, POS ATP sync, packing confirmation events.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Out of scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Carrier routing UI, loyalty engine, POS hardware replacement.</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Source BRD IDs</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code>, <code>BRD-REQ-02</code>, <code>BRD-REQ-03</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Source process</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">PROC-2026-01 Steps 2-5, EX-01, EX-03</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Actors &amp; Systems</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Actor / system</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Type</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Role in solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Online customer</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Human</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Triggers paid order that requires inventory hold</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cashier / Store POS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Human + System</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Sells from ATP; operates offline when needed</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Warehouse operator</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Human</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Confirms picking/packing against held inventory</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cloud OMS API</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">System</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Creates holds, timers, events, hard deduct</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Epics &amp; User Stories Backlog</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Story ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Epic</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">User story</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Priority</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">BRD link</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Estimate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Inventory hold</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As an online customer, I want my paid item held for 15 minutes, so that it is not sold in-store before picking.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">5 SP</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Offline POS</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As a cashier, I want to complete checkout during network outage, so that the queue does not stop.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">8 SP</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Fulfillment</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As a warehouse operator, I want to confirm pack against a hold, so that stock is hard-deducted correctly.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code>, <code>BRD-REQ-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">3 SP</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-04</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Inventory hold</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As the OMS, I want to auto-release expired holds, so that walk-in ATP is restored.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">3 SP</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. Acceptance Criteria (Given / When / Then)</h2>
+<div style="background-color: #fafbfc; border: 1px solid #dfe1e6; border-radius: 6px; padding: 14px; margin: 14px 0;">
+  <strong>US-01: Create soft hold on payment success</strong>
+  <div style="background-color: #253858; color: #ebecf0; padding: 12px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; margin-top: 8px;">
+    <span style="color: #79f2c0;">Scenario:</span> Hold created when ATP is available<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Given</span> SKU POLO-WHT-M at Branch 5 has Available=2<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">When</span> online payment for qty=1 succeeds<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Then</span> a reservation with TTL=15 minutes is created<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">And</span> Available becomes 1 and Reserved becomes 1<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">And</span> POS ATP is updated within 3 minutes
+  </div>
+</div>
+<div style="background-color: #fafbfc; border: 1px solid #dfe1e6; border-radius: 6px; padding: 14px; margin: 14px 0;">
+  <strong>US-01: Reject hold when ATP is zero</strong>
+  <div style="background-color: #253858; color: #ebecf0; padding: 12px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; margin-top: 8px;">
+    <span style="color: #79f2c0;">Scenario:</span> Insufficient ATP<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Given</span> Available=0 for the requested SKU/branch<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">When</span> reserve is requested after payment authorization<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Then</span> API returns 409 with code ATP_INSUFFICIENT<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">And</span> no reservation row is persisted
+  </div>
+</div>
+<div style="background-color: #fafbfc; border: 1px solid #dfe1e6; border-radius: 6px; padding: 14px; margin: 14px 0;">
+  <strong>US-02: Offline checkout</strong>
+  <div style="background-color: #253858; color: #ebecf0; padding: 12px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; margin-top: 8px;">
+    <span style="color: #79f2c0;">Scenario:</span> POS sells while offline<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Given</span> POS has lost cloud connectivity<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">When</span> cashier completes a sale from local snapshot ATP<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Then</span> receipt is issued and sale is queued in local outbox<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">And</span> sale syncs by timestamp when connectivity returns
+  </div>
+</div>
+
+<h2>5. Functional Requirements (Detailed)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">FR ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Requirement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Story</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Rule / process link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">System shall create a soft reservation with configurable TTL after payment success.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-01</code> / PROC Step 2</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">System shall publish ReserveCreatedEvent to POS clients.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">PROC Step 3</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS shall support offline sale queue with timestamp ordering.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-02</code> / EX-03</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-04</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">System shall auto-release reservations at TTL expiry and write audit reason.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-04</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-03</code> / EX-01</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>6. API / Interface Contracts</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Method</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Endpoint</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Purpose &amp; payload</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Story</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; font-weight: bold; color: #00875a;">POST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>/api/v1/inventory/reserve</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>{"orderId":1024,"branchId":5,"sku":"POLO-WHT-M","qty":1,"ttlMinutes":15}</code><br/>201 Created; 409 ATP_INSUFFICIENT</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; font-weight: bold; color: #de350b;">DELETE</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>/api/v1/inventory/reserve/{id}</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Release hold on cancel/timeout<br/>204 No Content; 404 if unknown</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-04</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; font-weight: bold; color: #00875a;">POST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>/api/v1/orders/{id}/pack-confirm</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>{"reservationId":"...","pickedQty":1}</code><br/>Hard deduct + audit</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-03</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>7. Non-Functional Requirements</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">NFR ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Category</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Requirement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Measure / target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Performance</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reserve API p95 latency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 300 ms</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Performance</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS checkout interaction</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">&lt; 3 seconds</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Availability</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS must sell while cloud unreachable</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Offline mode available</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-04</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Security / audit</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reserve/release/pack actions audited</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Actor, timestamp, reason retained 12 months</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>8. Data Rules &amp; Validation</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Field / entity</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Validation rule</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Error behavior</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">qty</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Integer &gt; 0</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">400 INVALID_QTY</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">ttlMinutes</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">1..15 (default 15)</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">400 INVALID_TTL</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">sku + branchId</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Must exist and be active</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">404 UNKNOWN_SKU_BRANCH</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>9. Learner Practice Workspace</h2>
+<div style="background-color: #f4f5f7; border: 1px dashed #0052cc; padding: 14px; border-radius: 6px; margin: 14px 0;">
+  <strong>Complete using scenario evidence:</strong><br/>
+  &bull; Add US-05 for customer cancel within 5 minutes and matching API.<br/>
+  &bull; Write NFR for idempotent reserve retries.<br/>
+  &bull; Confirm every MUST story has both happy-path and exception scenarios.
+</div>

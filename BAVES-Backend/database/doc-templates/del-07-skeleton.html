@@ -1,0 +1,275 @@
+<h1>Requirements Specification</h1>
+
+<div style="background-color: #f4f5f7; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
+  <strong>Document Governance</strong><br/>
+  &bull; <strong>Document type:</strong> Software / Solution Requirements Specification<br/>
+  &bull; <strong>Project:</strong> [Project name] &nbsp;|&nbsp; <strong>Document ID:</strong> SRS-2026-01<br/>
+  &bull; <strong>Author (Lead BA):</strong> [Learner full name] &nbsp;|&nbsp; <strong>Technical approver:</strong> [IT Lead / Architect]<br/>
+  &bull; <strong>Status:</strong> <span style="background-color: #dfe1e6; color: #42526e; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">DRAFT</span> &nbsp;|&nbsp; <strong>Deliverable:</strong> DEL-07
+</div>
+
+<div style="background-color: #deebff; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong>Learner guidelines</strong><br/>
+  1. Derive solution requirements from approved business requirements.<br/>
+  2. Write user stories with measurable acceptance criteria (Given / When / Then).<br/>
+  3. Include API contracts and non-functional requirements needed for delivery.
+</div>
+
+<h2>1. Scope &amp; Trace Context</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 30%;">Item</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Solution in scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Capabilities covered by this SRS]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Out of scope</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[Excluded capabilities]</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Source BRD IDs</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code>, <code>BRD-REQ-02</code>, ...</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Source process</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">[PROC document / steps]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Actors &amp; Systems</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Actor / system</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Type</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Role in solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Primary user]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Human</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Goal]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Supporting user]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Human</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Goal]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[System]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">System</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Integration role]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Epics &amp; User Stories Backlog</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Story ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Epic</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">User story</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Priority</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">BRD link</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Estimate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Epic]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As a [role], I want [capability], so that [value].</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[SP]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Epic]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As a [role], I want [capability], so that [value].</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[SP]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Epic]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">As a [role], I want [capability], so that [value].</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">SHOULD</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-xx</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[SP]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. Acceptance Criteria (Given / When / Then)</h2>
+<div style="background-color: #fafbfc; border: 1px solid #dfe1e6; border-radius: 6px; padding: 14px; margin: 14px 0;">
+  <strong>US-01: [Story title]</strong>
+  <div style="background-color: #253858; color: #ebecf0; padding: 12px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; margin-top: 8px;">
+    <span style="color: #79f2c0;">Scenario:</span> [Happy path name]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Given</span> [precondition]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">When</span> [action]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Then</span> [observable result]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">And</span> [additional result]
+  </div>
+</div>
+<div style="background-color: #fafbfc; border: 1px solid #dfe1e6; border-radius: 6px; padding: 14px; margin: 14px 0;">
+  <strong>US-01: [Alternate / exception]</strong>
+  <div style="background-color: #253858; color: #ebecf0; padding: 12px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; margin-top: 8px;">
+    <span style="color: #79f2c0;">Scenario:</span> [Exception name]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Given</span> [precondition]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">When</span> [action]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Then</span> [error / alternate behavior]
+  </div>
+</div>
+<div style="background-color: #fafbfc; border: 1px solid #dfe1e6; border-radius: 6px; padding: 14px; margin: 14px 0;">
+  <strong>US-02: [Story title]</strong>
+  <div style="background-color: #253858; color: #ebecf0; padding: 12px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12px; line-height: 1.6; margin-top: 8px;">
+    <span style="color: #79f2c0;">Scenario:</span> [Scenario name]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Given</span> [precondition]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">When</span> [action]<br/>
+    &nbsp;&nbsp;<span style="color: #4c9aff;">Then</span> [result]
+  </div>
+</div>
+
+<h2>5. Functional Requirements (Detailed)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">FR ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Requirement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Story</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Rule / process link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[System shall...]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-01</code> / Step [n]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[System shall...]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-xx</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FR-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[System shall...]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Link]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>6. API / Interface Contracts</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12px;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Method</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Endpoint</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Purpose &amp; payload</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Story</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; font-weight: bold; color: #00875a;">POST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>/api/v1/[resource]</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>{"field":"value"}</code><br/>Success: 201; Errors: 4xx</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; font-weight: bold; color: #de350b;">DELETE</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>/api/v1/[resource]/{id}</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Purpose]<br/>Success: 204; Errors: 4xx</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; font-weight: bold; color: #0052cc;">GET</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>/api/v1/[resource]/{id}</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Purpose]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>US-02</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>7. Non-Functional Requirements</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">NFR ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Category</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Requirement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Measure / target</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Performance</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Latency / throughput]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Availability</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Uptime / offline behavior]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Security / audit</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Auth / logging]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-04</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Reliability</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Retry / idempotency]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Target]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>8. Data Rules &amp; Validation</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Field / entity</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Validation rule</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Error behavior</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Field]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Required / range / format]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[HTTP/code / message]</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Field]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Rule]</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">[Behavior]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>9. Learner Practice Workspace</h2>
+<div style="background-color: #f4f5f7; border: 1px dashed #0052cc; padding: 14px; border-radius: 6px; margin: 14px 0;">
+  <strong>Complete using scenario evidence:</strong><br/>
+  &bull; Add US-04 for a warehouse confirmation action.<br/>
+  &bull; Write one negative Given/When/Then for insufficient ATP.<br/>
+  &bull; Ensure every MUST story maps to a BRD requirement ID.
+</div>

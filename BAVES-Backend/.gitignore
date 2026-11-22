@@ -1,0 +1,41 @@
+# .NET
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+TestResults/
+coverage/
+*.pdb
+**/Properties/launchSettings.json
+**/appsettings.Development.json
+
+# Python & AI Runtime
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+env/
+venv/
+ENV/
+*.env
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs & Database
+*.log
+docker-data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Cursor
+.cursor/
+
+# Temporary Render Artifacts
+render_revised_word/

@@ -1,0 +1,294 @@
+<h1>Business Requirements</h1>
+
+<div style="background-color: #f4f5f7; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
+  <strong>Document Governance</strong><br/>
+  &bull; <strong>Document type:</strong> Business Requirements Document (BRD)<br/>
+  &bull; <strong>Project:</strong> VinaSupply Omnichannel OMS &nbsp;|&nbsp; <strong>Document ID:</strong> BRD-2026-01<br/>
+  &bull; <strong>Owner (Lead BA):</strong> [Learner full name] &nbsp;|&nbsp; <strong>Sponsor:</strong> Chief Operating Officer (COO)<br/>
+  &bull; <strong>Version:</strong> v1.2 &nbsp;|&nbsp; <strong>Status:</strong> <span style="background-color: #deebff; color: #0747a6; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">IN REVIEW</span> &nbsp;|&nbsp; <strong>Deliverable:</strong> DEL-05
+</div>
+
+<div style="background-color: #deebff; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong>Learner guidelines</strong><br/>
+  Sample BRD for omnichannel inventory hold. Replace metrics and rules with your scenario evidence.
+</div>
+
+<h2>1. Business Objectives</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Objective ID</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Category</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Objective statement</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Baseline</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Target</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Measure</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;"><code>OBJ-01</code></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Financial</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Reduce oversell recovery / compensation cost</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">1.8B VND/year</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">&lt; 300M VND/year</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Finance cancellation cost report</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;"><code>OBJ-02</code></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Operational</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Keep channel inventory consistent near real time</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">~30 min sync lag</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">&lt; 3 min payment-to-POS signal</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">OMS/POS sync latency logs</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;"><code>OBJ-03</code></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Customer</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Improve fulfillment CSAT</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">3.2 / 5.0</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">&gt; 4.5 / 5.0</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Post-delivery survey</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Scope</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 50%;">In scope</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 50%;">Out of scope</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; vertical-align: top;">
+        &bull; Soft inventory hold after online payment<br/>
+        &bull; POS availability update / offline continuity<br/>
+        &bull; Warehouse pick notification within hold window<br/>
+        &bull; Cancel reason logging for oversell cases
+      </td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; vertical-align: top;">
+        &bull; New marketplace channel onboarding<br/>
+        &bull; Full WMS replacement<br/>
+        &bull; Loyalty points redesign<br/>
+        &bull; Hardware POS replacement program
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. As-Is vs To-Be</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 50%;">Current state (As-Is)</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 50%;">Future state (To-Be)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; vertical-align: top; background-color: #fafbfc;">
+        1. Customer pays online.<br/>
+        2. Stock remains sellable on POS for up to ~30 minutes.<br/>
+        3. Walk-in sale consumes the unit.<br/>
+        4. Warehouse finds empty shelf and cancels online order.<br/>
+        5. CS manually apologizes / compensates.
+      </td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; vertical-align: top; background-color: #f3f9f4;">
+        1. Customer pays online.<br/>
+        2. System creates inventory hold immediately.<br/>
+        3. POS ATP decreases; walk-in cannot sell held unit.<br/>
+        4. Warehouse receives pick list within 5 minutes.<br/>
+        5. Auto-release at 15 minutes if picking not started; notify customer if cancelled.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. Stakeholders &amp; Needs</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Stakeholder</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Need / expectation</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Linked objective</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Source finding</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Warehouse Lead</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Exclusive hold before picking starts</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FND-02</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">IT Lead</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS remains fast; offline sales still possible</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FND-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Store Manager</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Hold window short enough not to block walk-ins</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>FND-03</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5. Business Requirements (MoSCoW)</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Req ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Priority</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Requirement statement</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Acceptance signal</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Objective</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">The business must soft-hold inventory immediately after successful online payment for up to 15 minutes.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Held qty increases; POS ATP decreases within target latency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">POS must continue checkout when branch network is unavailable, then reconcile safely.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Offline sale completes; later sync without silent loss</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-02</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">MUST</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Every cancel / release must store user/system actor, timestamp, and reason code.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Audit log entry exists for each cancel/release</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-04</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">SHOULD</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">If home branch cannot fulfill, system should propose nearest alternate branch within 5 km.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Alternate branch suggestion shown before cancel</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-03</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-05</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">COULD</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Executives could view near-real-time ATP by branch on a dashboard.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Dashboard refreshes within agreed SLA</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>OBJ-02</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>6. Business Rules</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Rule ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Rule name</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Logic / policy</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Related req</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Soft inventory hold</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">IF payment succeeds THEN decrease Available and increase Reserved for TTL=15 minutes unless status becomes Picking.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Offline POS priority</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">IF POS is offline THEN allow sale from last known ATP snapshot and queue sync by timestamp when online.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-02</code></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BR-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Auto-release &amp; notify</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">IF hold expires without Picking THEN release reserved qty and notify CS/customer with reason OVERSELL_PREVENT_TIMEOUT.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>BRD-REQ-01</code>, <code>BRD-REQ-03</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>7. Non-Functional Business Constraints</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Category</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Constraint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-B-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Performance</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Store checkout must remain under 3 seconds in normal network conditions.</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-B-02</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Audit</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cancel/release events retained for at least 12 months.</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>NFR-B-03</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Continuity</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Branch must sell during temporary cloud outage without freezing the queue.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>8. Assumptions, Dependencies &amp; Risks</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">ID</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Type</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Description</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Impact</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Response</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>ASM-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Assumption</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Existing POS devices can host local cache without hardware refresh.</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Validate with IT pilot on 2 branches</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>DEP-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Dependency</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Payment gateway success webhook reliability</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Define retry + reconcile job</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;"><code>RSK-01</code></td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Risk</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Long holds reduce walk-in sell-through</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">M</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cap TTL at 15 minutes; monitor conversion</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>9. Learner Practice Workspace</h2>
+<div style="background-color: #f4f5f7; border: 1px dashed #0052cc; padding: 14px; border-radius: 6px; margin: 14px 0;">
+  <strong>Complete using scenario evidence:</strong><br/>
+  &bull; Add BRD-REQ-06 (SHOULD/COULD) for customer compensation messaging.<br/>
+  &bull; Trace OBJ-01 to at least two MUST requirements.<br/>
+  &bull; Confirm every business rule references a requirement ID.
+</div>

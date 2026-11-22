@@ -1,0 +1,237 @@
+<h1>Stakeholder Analysis</h1>
+
+<div style="background-color: #f4f5f7; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 16px 0; border-radius: 4px;">
+  <strong>Document Governance</strong><br/>
+  &bull; <strong>Document type:</strong> Stakeholder Analysis / Stakeholder Register<br/>
+  &bull; <strong>Project:</strong> VinaSupply Omnichannel OMS &nbsp;|&nbsp; <strong>Document ID:</strong> STK-2026-01<br/>
+  &bull; <strong>Owner (Lead BA):</strong> [Learner full name] &nbsp;|&nbsp; <strong>Sponsor:</strong> Chief Operating Officer (COO)<br/>
+  &bull; <strong>Status:</strong> <span style="background-color: #deebff; color: #0747a6; padding: 2px 8px; border-radius: 3px; font-weight: bold; font-size: 11px;">IN REVIEW</span> &nbsp;|&nbsp; <strong>Deliverable:</strong> DEL-03
+</div>
+
+<div style="background-color: #deebff; border-left: 4px solid #0052cc; padding: 12px 16px; margin: 14px 0; border-radius: 4px;">
+  <strong>Learner guidelines</strong><br/>
+  Sample content shows a complete stakeholder analysis for omnichannel inventory sync. Replace names and facts with your scenario evidence.
+</div>
+
+<h2>1. Stakeholder Identification &amp; Profiles</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Stakeholder / Role</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Representative</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Interest</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Influence</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Attitude</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Key pain / need</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6;">Desired outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>IT Lead</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Nguyen Quoc Tuan</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Cautious</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">POS must stay fast; fears continuous sync overloads branch DB</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Delta sync + offline cache; POS response &lt; 500ms</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Warehouse Lead</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Hoang Van Kho</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">M</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Supportive</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Units sold at cashier while pick list is being walked</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Hard inventory hold on payment; pick list within 5 minutes</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Store Manager</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Tran Thi Mai</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">M</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Neutral</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Queue delays when network is slow; fear of lost walk-in sales</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Checkout under 3 seconds; online hold max 15 minutes</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>Customer Service Lead</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Le Hoang Yen</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">M</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">L</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Supportive</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Manual apology calls after oversell cancellations</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Automated notification + clear cancel reason codes</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; border: 1px solid #dfe1e6; background-color: #fafbfc;"><strong>COO (Sponsor)</strong></td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Steering Committee</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Supportive</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">1.8B VND/year cancellation cost; CSAT 3.2</td>
+      <td style="padding: 10px; border: 1px solid #dfe1e6;">Oversell cancel &lt; 2%; measurable ROI in 2 quarters</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. Power / Interest Grid</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 50%;">Low Interest</th>
+      <th style="padding: 10px; border: 1px solid #dfe1e6; width: 50%;">High Interest</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 12px; border: 1px solid #dfe1e6; vertical-align: top; background-color: #fafbfc;">
+        <strong>High Power &mdash; Keep Satisfied</strong><br/>
+        &bull; <strong>CFO:</strong> ROI and cost control<br/>
+        &bull; <strong>Legal / Compliance:</strong> payment &amp; customer data rules
+      </td>
+      <td style="padding: 12px; border: 1px solid #dfe1e6; vertical-align: top; background-color: #deebff;">
+        <strong>High Power &mdash; Manage Closely</strong><br/>
+        &bull; <strong>COO (Sponsor)</strong><br/>
+        &bull; <strong>IT Lead</strong>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding: 12px; border: 1px solid #dfe1e6; vertical-align: top; background-color: #f4f5f7;">
+        <strong>Low Power &mdash; Monitor</strong><br/>
+        &bull; POS hardware vendor
+      </td>
+      <td style="padding: 12px; border: 1px solid #dfe1e6; vertical-align: top; background-color: #e3fcef;">
+        <strong>Low Power &mdash; Keep Informed</strong><br/>
+        &bull; Cashiers &amp; warehouse pickers<br/>
+        &bull; Customer Service agents
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>3. Engagement &amp; Communication Plan</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Stakeholder group</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Engagement goal</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Technique</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Cadence / channel</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Sponsor / COO</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Confirm outcomes, approve scope &amp; budget gates</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Steering review + KPI dashboard</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Bi-weekly / exec briefing</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Lead BA</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">IT Lead</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Validate architecture constraints and NFRs</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Technical interview + architecture walkthrough</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">2x / sprint / Teams</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Lead BA</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Warehouse + Store</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Elicit as-is pain and to-be hold rules</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Observation + process workshop</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Weekly workshop / on-site</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Lead BA</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Customer Service</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Define cancel messaging &amp; compensation rules</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Interview + sample scripts</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Once per sprint</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Lead BA</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>4. RACI Matrix</h2>
+<p style="font-size: 12px; color: #6b778c;"><strong>R</strong> Responsible &nbsp;|&nbsp; <strong>A</strong> Accountable &nbsp;|&nbsp; <strong>C</strong> Consulted &nbsp;|&nbsp; <strong>I</strong> Informed</p>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Activity</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">Lead BA</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">IT Lead</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">Warehouse</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">Store</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">Sponsor</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Define BA approach &amp; plan</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold; color: #0052cc;">R</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">I</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold;">A</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Specify inventory hold rules</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold; color: #0052cc;">R</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold;">A</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">I</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Design sync / API contracts</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold; color: #0052cc;">R / A</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">I</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">I</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">I</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">UAT &amp; go-live readiness</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">C</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold;">R / A</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center;">R</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6; text-align: center; font-weight: bold;">A</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5. Stakeholder Risks &amp; Resistance</h2>
+<table style="width: 100%; border-collapse: collapse; margin: 14px 0;">
+  <thead>
+    <tr style="background-color: #f4f5f7; border-bottom: 2px solid #dfe1e6; text-align: left;">
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Stakeholder</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Risk / resistance</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Impact</th>
+      <th style="padding: 8px; border: 1px solid #dfe1e6;">Mitigation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">IT Lead</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Rejects near-real-time sync if POS SLA is threatened</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">H</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Pilot delta sync + offline queue; publish NFR gates</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Store Manager</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Resists long online holds that reduce walk-in sales</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">M</td>
+      <td style="padding: 8px; border: 1px solid #dfe1e6;">Cap hold at 15 minutes with auto-release rule</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>6. Learner Practice Workspace</h2>
+<div style="background-color: #f4f5f7; border: 1px dashed #0052cc; padding: 14px; border-radius: 6px; margin: 14px 0;">
+  <strong>Complete using scenario evidence:</strong><br/>
+  &bull; Add E-commerce / Marketing lead to the profile table and Power/Interest grid.<br/>
+  &bull; Assign RACI for &quot;Flash Sale campaign inventory freeze&quot;.<br/>
+  &bull; Confirm every RACI row has exactly one Accountable (A).
+</div>

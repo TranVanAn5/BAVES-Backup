@@ -1,0 +1,26 @@
+# Dependencies & build
+node_modules/
+dist/
+bin/
+obj/
+packages/
+.vs/
+.turbo/
+.cache/
+*.user
+*.suo
+TestResults/
+_build_check/
+_build_check2/
+artifacts/
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log

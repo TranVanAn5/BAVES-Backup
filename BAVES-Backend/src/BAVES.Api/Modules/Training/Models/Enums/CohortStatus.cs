@@ -1,0 +1,9 @@
+namespace BAVES.Api.Modules.Training.Models.Enums;
+
+public enum CohortStatus
+{
+    Draft = 0,
+    Active = 1,
+    Completed = 2,
+    Archived = 3
+}
